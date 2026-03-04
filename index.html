@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careers | Tyler Nicholas Group</title>
+  <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
+  
+  <style> body { opacity: 0; visibility: hidden; } </style>
+  <script> window.addEventListener('load', function() { document.body.style.transition = 'opacity 0.2s ease-in'; document.body.style.opacity = '1'; document.body.style.visibility = 'visible'; }); </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen" id="body">
+
+  <nav class="bg-[#001f3f] text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-md relative z-50">
+    <div class="font-bold text-xl tracking-wider uppercase">TNG Careers Portal</div>
+    <div class="hidden md:flex space-x-6 text-sm items-center font-bold">
+      <a href="https://tylernicholasgroup.com" class="hover:text-gray-300 transition-colors">Return to TNG Corporate <i class="fa-solid fa-arrow-right-from-bracket ml-1"></i></a>
+    </div>
+  </nav>
+
+  <div class="bg-[#001f3f] text-white py-20 px-6 md:px-12 text-center relative overflow-hidden border-b-4 border-[#a6192e]">
+    <i class="fa-solid fa-briefcase absolute -left-10 -bottom-10 text-[12rem] text-white opacity-5 pointer-events-none"></i>
+    <div class="relative z-10">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">Shape the Future.</h1>
+      <p class="text-gray-300 max-w-2xl mx-auto md:text-xl leading-relaxed">Explore open positions across the Tyler Nicholas Group ecosystem, including corporate leadership, digital agencies, and our premier virtual aviation subsidiaries.</p>
+    </div>
+  </div>
+
+  <main class="flex-grow max-w-6xl mx-auto py-16 px-6 md:px-12 w-full">
+    
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 border-b border-gray-200 pb-4">
+      <div>
+        <h2 class="text-2xl font-bold text-[#001f3f]">Current Openings</h2>
+        <p class="text-gray-600 text-sm mt-1">Showing all active opportunities across the global TNG portfolio.</p>
+      </div>
+      <div class="mt-4 md:mt-0 text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center">
+        <i class="fa-solid fa-circle-notch fa-spin mr-2 text-[#a6192e]" id="loading-spinner"></i> <span id="job-count">Syncing databases...</span>
+      </div>
+    </div>
+
+    <div id="jobs-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      </div>
+
+  </main>
+
+  <footer class="bg-[#001f3f] text-white py-8 px-6 md:px-12 mt-auto text-center border-t border-blue-900">
+    <p class="text-sm text-gray-400">&copy; 2026 Tyler Nicholas Group LLC. All rights reserved. <br> TNG is an equal opportunity employer committed to diversity and inclusion.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const checkSupabase = setInterval(async () => {
+        if (window.supabase) {
+          clearInterval(checkSupabase); 
+          
+          // 1. Initialize TNG Supabase Database
+          const tngDb = window.supabase.createClient(
+            'https://hicowukbjsbpuebquqbh.supabase.co', 
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpY293dWtianNicHVlYnF1cWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzgyNzQsImV4cCI6MjA4NzU1NDI3NH0.sz7ZNU3-WcsskIaHC5Cjs_-WVmXLtYR15Iy8VGi8ch0'
+          );
+
+          // 2. Initialize EGR Supabase Database
+          const egrDb = window.supabase.createClient(
+            'https://zboyabxzhptnxnmofvcz.supabase.co', 
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpib3lhYnh6aHB0bnhubW9mdmN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3NjU3MTgsImV4cCI6MjA4NTM0MTcxOH0.2et1T3bQqr-ZzZgx-VWaq3kR0FJDprcAbbWBby6oRys'
+          );
+
+          const container = document.getElementById('jobs-container');
+          let combinedJobs = [];
+
+          try {
+            // Fetch TNG Jobs
+            const { data: tngData, error: tngError } = await tngDb
+              .from('job_postings')
+              .select('*')
+              .eq('is_active', true);
+            
+            if (tngData) {
+              tngData.forEach(job => {
+                combinedJobs.push({
+                  source: 'TNG',
+                  title: job.title,
+                  company: job.company,
+                  location: job.location || 'Remote',
+                  type: job.employment_type || 'Full-Time',
+                  description: job.description,
+                  external_link: job.external_link,
+                  date: new Date(job.created_at)
+                });
+              });
+            }
+
+            // Fetch EGR Jobs
+            const { data: egrData, error: egrError } = await egrDb
+              .from('jobs')
+              .select('*');
+            
+            if (egrData) {
+              egrData.forEach(job => {
+                // Filter out closed jobs if your status uses "Closed". Assuming "Open" or "Published" is active.
+                if(job.status !== 'Closed') {
+                  combinedJobs.push({
+                    source: 'EGR',
+                    title: job.title,
+                    company: 'Emirates Group Roblox',
+                    location: 'Remote / Virtual',
+                    type: job.volunteer_basis ? 'Volunteer / Unpaid' : 'Staff',
+                    description: job.summary || job.description || 'Join the premier virtual aviation community on the Roblox platform.',
+                    slug: job.slug,
+                    date: new Date(job.published_at || Date.now())
+                  });
+                }
+              });
+            }
+
+            // Sort all jobs by date (newest first)
+            combinedJobs.sort((a, b) => b.date - a.date);
+
+            // Update UI Counters
+            document.getElementById('loading-spinner').classList.add('hidden');
+            document.getElementById('job-count').innerText = `${combinedJobs.length} Open Positions`;
+
+            // Render Jobs
+            if (combinedJobs.length === 0) {
+              container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 font-bold">No open positions at this time. Please check back later.</div>`;
+              return;
+            }
+
+            let html = '';
+            combinedJobs.forEach(job => {
+              
+              // Decide where the Apply button goes
+              let applyUrl = '';
+              let btnText = 'Apply Now';
+              let btnClass = 'bg-[#001f3f] hover:bg-blue-900 text-white';
+
+              if (job.source === 'EGR') {
+                // Redirect to EGR Careers
+                applyUrl = `https://careers.emiratesgrouproblox.link/`;
+                btnText = 'Apply on EGR Portal <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>';
+                btnClass = 'bg-[#a6192e] hover:bg-red-800 text-white';
+              } else if (job.external_link) {
+                // If TNG job has an external link
+                applyUrl = job.external_link;
+                btnText = 'Apply Externally <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>';
+              } else {
+                // Standard TNG Job -> Route to the new App Center we are about to build!
+                const params = new URLSearchParams({ title: job.title, company: job.company, type: job.type }).toString();
+                applyUrl = `./apply/?${params}`;
+              }
+
+              // Build the Card
+              html += `
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-lg transition-shadow flex flex-col h-full group">
+                  <div class="mb-4">
+                    <span class="inline-block bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">${job.company}</span>
+                    <h3 class="text-xl font-bold text-[#001f3f] leading-tight group-hover:text-[#a6192e] transition-colors">${job.title}</h3>
+                  </div>
+                  
+                  <div class="flex items-center text-sm text-gray-500 font-semibold mb-4 space-x-4">
+                    <span><i class="fa-solid fa-location-dot mr-1 text-gray-400"></i> ${job.location}</span>
+                    <span><i class="fa-solid fa-clock mr-1 text-gray-400"></i> ${job.type}</span>
+                  </div>
+                  
+                  <p class="text-sm text-gray-600 mb-8 line-clamp-3 flex-grow">${job.description}</p>
+                  
+                  <div class="mt-auto">
+                    <a href="${applyUrl}" class="${btnClass} font-bold py-3 px-6 rounded transition-colors shadow block text-center">
+                      ${btnText}
+                    </a>
+                  </div>
+                </div>
+              `;
+            });
+
+            container.innerHTML = html;
+
+          } catch (err) {
+            console.error("Database Sync Error:", err);
+            container.innerHTML = `<div class="col-span-full text-center py-12 text-red-500 font-bold">Failed to load open positions. Please refresh the page.</div>`;
+          }
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>
