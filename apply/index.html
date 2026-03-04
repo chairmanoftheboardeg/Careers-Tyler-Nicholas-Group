@@ -381,12 +381,14 @@
             const { error } = await supabase.from('job_applications').insert([payload]);
 
             if (error) {
-              console.error(error);
-              errorMsg.innerText = "Database connection error. Please try again or contact HR support.";
+              console.error("SUPABASE ERROR:", error);
+              // THIS LINE WILL PRINT THE EXACT ERROR REASON
+              errorMsg.innerText = `Database Error: ${error.message} ${error.details || ''}`;
               errorMsg.classList.remove('hidden');
               btn.innerHTML = `Transmit Official Application <i class="fa-solid fa-paper-plane ml-2"></i>`;
               btn.disabled = false;
               btn.classList.remove('opacity-75', 'cursor-not-allowed');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
               form.classList.add('hidden');
               document.getElementById('form-success').classList.remove('hidden');
