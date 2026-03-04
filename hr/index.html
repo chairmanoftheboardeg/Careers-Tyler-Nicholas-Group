@@ -19,12 +19,10 @@
   <div id="login-view" class="fixed inset-0 z-50 bg-[#001f3f] flex items-center justify-center p-6 transition-opacity duration-500">
     <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
       <div class="absolute top-0 left-0 w-full h-2 bg-[#a6192e]"></div>
-      
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-[#001f3f] tracking-tighter uppercase">TNG HR</h1>
         <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">Authorized Personnel Only</p>
       </div>
-
       <form id="login-form" class="space-y-6">
         <div>
           <label class="block text-sm font-bold text-gray-700 mb-1">Corporate Email</label>
@@ -34,9 +32,7 @@
           <label class="block text-sm font-bold text-gray-700 mb-1">Passcode</label>
           <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] outline-none" required>
         </div>
-        
         <div id="login-error" class="hidden text-red-600 text-sm font-bold text-center bg-red-50 p-3 rounded"></div>
-
         <button type="submit" id="login-btn" class="w-full bg-[#001f3f] hover:bg-blue-900 text-white font-bold py-4 rounded-lg shadow-lg transition-colors uppercase tracking-widest flex justify-center items-center">
           Authenticate <i class="fa-solid fa-lock ml-2"></i>
         </button>
@@ -59,8 +55,9 @@
       </div>
       
       <nav class="flex-grow p-4 space-y-2">
-        <a href="#" class="block px-4 py-3 bg-[#a6192e] rounded text-sm font-bold shadow"><i class="fa-solid fa-users mr-3"></i> Applications</a>
-        <a href="../" class="block px-4 py-3 hover:bg-white/10 rounded text-sm transition-colors"><i class="fa-solid fa-briefcase mr-3"></i> View Live Jobs</a>
+        <button onclick="switchTab('apps')" id="tab-btn-apps" class="w-full text-left px-4 py-3 bg-[#a6192e] rounded text-sm font-bold shadow transition-colors"><i class="fa-solid fa-users w-5"></i> Applications</button>
+        <button onclick="switchTab('jobs')" id="tab-btn-jobs" class="w-full text-left px-4 py-3 hover:bg-white/10 rounded text-sm font-bold transition-colors text-gray-300 hover:text-white"><i class="fa-solid fa-briefcase w-5"></i> Manage Jobs</button>
+        <a href="../" target="_blank" class="block px-4 py-3 hover:bg-white/10 rounded text-sm transition-colors text-gray-300"><i class="fa-solid fa-arrow-up-right-from-square w-5"></i> View Public Portal</a>
       </nav>
       
       <div class="p-4 border-t border-blue-900">
@@ -72,132 +69,197 @@
 
     <main class="flex-grow flex flex-col h-screen overflow-hidden bg-gray-100">
       <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center z-10">
-        <h2 class="text-xl font-bold text-[#001f3f]">Applicant Tracking System</h2>
+        <h2 class="text-xl font-bold text-[#001f3f]" id="header-title">Applicant Tracking System</h2>
         <div class="flex items-center space-x-4">
-          <span class="text-sm font-bold text-gray-500"><i class="fa-solid fa-circle text-green-500 text-[10px] mr-1"></i> Database Connected</span>
+          <span class="text-sm font-bold text-gray-500"><i class="fa-solid fa-circle text-green-500 text-[10px] mr-1"></i> Connected</span>
         </div>
       </header>
 
       <div class="flex-grow p-8 overflow-y-auto">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total Applications</p>
-            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-total">0</h3>
+        
+        <div id="view-apps" class="block space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
+              <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total</p>
+              <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-total">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-yellow-500">
+              <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Pending</p>
+              <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-pending">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-purple-500">
+              <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Interviewing</p>
+              <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-interviewing">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-green-500">
+              <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Hired</p>
+              <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-hired">0</h3>
+            </div>
           </div>
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-yellow-500">
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Pending Review</p>
-            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-pending">0</h3>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-purple-500">
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Interviewing</p>
-            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-interviewing">0</h3>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-green-500">
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Hired</p>
-            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-hired">0</h3>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+              <h3 class="font-bold text-[#001f3f]"><i class="fa-solid fa-inbox mr-2"></i> Application Inbox</h3>
+              <button onclick="fetchApplications()" class="text-sm bg-white border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-100 shadow-sm font-bold text-gray-700"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-white border-b border-gray-200 text-gray-500 uppercase text-[10px] tracking-wider">
+                  <tr>
+                    <th class="p-4 font-bold">Candidate</th>
+                    <th class="p-4 font-bold">Target Role</th>
+                    <th class="p-4 font-bold">Company</th>
+                    <th class="p-4 font-bold">Applied On</th>
+                    <th class="p-4 font-bold">Status</th>
+                    <th class="p-4 font-bold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="applications-table" class="divide-y divide-gray-100 text-gray-700">
+                  <tr><td colspan="6" class="p-8 text-center text-gray-400 font-bold">Loading Data...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-          <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <h3 class="font-bold text-[#001f3f]"><i class="fa-solid fa-inbox mr-2"></i> Application Inbox</h3>
-            <button onclick="fetchApplications()" class="text-sm bg-white border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-100 shadow-sm font-bold text-gray-700"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+        <div id="view-jobs" class="hidden space-y-8">
+          <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-[#001f3f]">
+            <div>
+              <h3 class="font-bold text-xl text-[#001f3f]">Job Directory</h3>
+              <p class="text-sm text-gray-500">Manage all open positions across the TNG network.</p>
+            </div>
+            <button onclick="openJobModal()" class="bg-[#a6192e] hover:bg-red-800 text-white font-bold py-2 px-6 rounded shadow transition-colors">
+              <i class="fa-solid fa-plus mr-2"></i> Create New Job
+            </button>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm whitespace-nowrap">
-              <thead class="bg-white border-b border-gray-200 text-gray-500 uppercase text-[10px] tracking-wider">
-                <tr>
-                  <th class="p-4 font-bold">Candidate</th>
-                  <th class="p-4 font-bold">Target Role</th>
-                  <th class="p-4 font-bold">Company</th>
-                  <th class="p-4 font-bold">Applied On</th>
-                  <th class="p-4 font-bold">Status</th>
-                  <th class="p-4 font-bold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="applications-table" class="divide-y divide-gray-100 text-gray-700">
-                <tr><td colspan="6" class="p-8 text-center text-gray-400 font-bold"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Loading Data...</td></tr>
-              </tbody>
-            </table>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase text-[10px] tracking-wider">
+                  <tr>
+                    <th class="p-4 font-bold">Job Title</th>
+                    <th class="p-4 font-bold">Company</th>
+                    <th class="p-4 font-bold">Location / Type</th>
+                    <th class="p-4 font-bold">Status</th>
+                    <th class="p-4 font-bold text-right">Manage</th>
+                  </tr>
+                </thead>
+                <tbody id="jobs-table" class="divide-y divide-gray-100 text-gray-700">
+                  <tr><td colspan="5" class="p-8 text-center text-gray-400 font-bold">Loading Jobs...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+
       </div>
     </main>
   </div>
 
   <div id="applicant-modal" class="fixed inset-0 z-[100] bg-black/60 hidden flex justify-end transition-opacity">
-    <div class="w-full md:w-2/3 lg:w-1/2 bg-white h-full shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-full" id="modal-content">
-      
-      <div class="bg-[#001f3f] text-white p-6 sticky top-0 z-10 flex justify-between items-center shadow-md">
+    <div class="w-full md:w-2/3 lg:w-1/2 bg-white h-full shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-full" id="app-modal-content">
+      <div class="bg-[#001f3f] text-white p-6 sticky top-0 z-20 flex justify-between items-center shadow-md">
         <div>
           <h2 class="text-2xl font-bold" id="modal-name">Candidate Name</h2>
           <p class="text-gray-300 text-sm" id="modal-role">Job Title • Company</p>
         </div>
-        <button onclick="closeModal()" class="text-white hover:text-gray-300 text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeAppModal()" class="text-white hover:text-gray-300 text-2xl"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
       <div class="bg-gray-100 p-4 border-b border-gray-200 flex justify-between items-center sticky top-[88px] z-10 shadow-sm">
         <span class="text-sm font-bold text-gray-600">Update Status:</span>
         <div class="flex space-x-2">
-          <button onclick="updateStatus('Pending')" class="px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded border border-yellow-200 hover:bg-yellow-200">Pending</button>
-          <button onclick="updateStatus('Interviewing')" class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded border border-purple-200 hover:bg-purple-200">Interviewing</button>
-          <button onclick="updateStatus('Rejected')" class="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-bold rounded border border-red-200 hover:bg-red-200">Rejected</button>
-          <button onclick="updateStatus('Hired')" class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded border border-green-200 hover:bg-green-200">Hired</button>
+          <button onclick="updateStatus('Pending')" class="px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded hover:bg-yellow-200">Pending</button>
+          <button onclick="updateStatus('Interviewing')" class="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded hover:bg-purple-200">Interviewing</button>
+          <button onclick="updateStatus('Rejected')" class="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-bold rounded hover:bg-red-200">Rejected</button>
+          <button onclick="updateStatus('Hired')" class="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded hover:bg-green-200">Hired</button>
         </div>
       </div>
-
       <div class="p-8 space-y-8">
-        
         <div class="grid grid-cols-2 gap-4 text-sm">
           <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Email</span><span class="font-bold text-[#001f3f]" id="modal-email"></span></div>
           <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Discord</span><span class="font-bold text-[#001f3f]" id="modal-discord"></span></div>
-          <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Location</span><span class="font-bold text-[#001f3f]" id="modal-location"></span></div>
-          <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Date of Birth</span><span class="font-bold text-[#001f3f]" id="modal-dob"></span></div>
           <div id="modal-roblox-wrap" class="col-span-2 hidden"><span class="text-gray-500 block text-xs uppercase tracking-widest">Roblox Username</span><span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded inline-block mt-1" id="modal-roblox"></span></div>
         </div>
-
         <hr class="border-gray-200">
-
         <div>
           <h3 class="text-lg font-bold text-[#001f3f] mb-4 uppercase tracking-widest border-l-4 border-[#a6192e] pl-3">Written Assessment</h3>
           <div class="space-y-6 text-sm">
             <div><p class="font-bold text-gray-800 mb-1">Why do you want this role/company?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q1"></p></div>
             <div><p class="font-bold text-gray-800 mb-1">What strengths do you bring?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q2"></p></div>
-            <div><p class="font-bold text-gray-800 mb-1">Biggest accomplishment / challenge overcome?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q3"></p></div>
-            <div><p class="font-bold text-gray-800 mb-1">Teamwork / Leadership Example:</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q4"></p></div>
-            <div><p class="font-bold text-gray-800 mb-1">Why should we hire you?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q5"></p></div>
-            <div><p class="font-bold text-gray-800 mb-1">Career Goals:</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q6"></p></div>
           </div>
         </div>
+        <div><a href="#" id="modal-portfolio" target="_blank" class="text-blue-600 hover:underline font-bold text-sm">View Portfolio Link</a></div>
+      </div>
+    </div>
+  </div>
 
-        <hr class="border-gray-200">
+  <div id="job-modal" class="fixed inset-0 z-[100] bg-black/60 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="bg-[#001f3f] text-white p-6 flex justify-between items-center">
+        <h2 class="text-xl font-bold" id="job-modal-title">Create New Job Posting</h2>
+        <button onclick="closeJobModal()" class="text-white hover:text-gray-300 text-xl"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <div class="p-6 overflow-y-auto flex-grow">
+        <form id="job-form" class="space-y-4">
+          <input type="hidden" id="edit-job-id">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Job Title *</label>
+              <input type="text" id="j-title" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Company / Subsidiary *</label>
+              <select id="j-company" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+                <option value="Tyler Nicholas Group">Tyler Nicholas Group (Corporate)</option>
+                <option value="Falcon LTD">Falcon LTD</option>
+                <option value="Blackwood Digital Services">Blackwood Digital Services</option>
+                <option value="Pretty Dazzle">Pretty Dazzle</option>
+                <option value="Tyler Nicholas Foundation">Tyler Nicholas Foundation</option>
+                <option value="Food Share Seychelles">Food Share Seychelles</option>
+              </select>
+            </div>
+          </div>
 
-        <div>
-          <h3 class="text-lg font-bold text-[#001f3f] mb-4 uppercase tracking-widest border-l-4 border-blue-500 pl-3">Logistics & Experience</h3>
-          <div class="grid grid-cols-2 gap-4 text-sm mb-6">
-            <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Source</span><span class="font-bold" id="modal-source"></span></div>
-            <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Start Date</span><span class="font-bold" id="modal-start"></span></div>
-            <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Legal to Work</span><span class="font-bold" id="modal-legal"></span></div>
-            <div><span class="text-gray-500 block text-xs uppercase tracking-widest">Remote OK</span><span class="font-bold" id="modal-remote"></span></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Location</label>
+              <input type="text" id="j-location" value="Remote" class="w-full px-3 py-2 border rounded outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Employment Type</label>
+              <select id="j-type" class="w-full px-3 py-2 border rounded outline-none">
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Volunteer">Volunteer / Unpaid</option>
+              </select>
+            </div>
           </div>
-          <div class="mb-4">
-            <span class="text-gray-500 block text-xs uppercase tracking-widest mb-1">Work Experience</span>
-            <p class="text-gray-600 bg-gray-50 p-3 rounded text-sm whitespace-pre-wrap border border-gray-100" id="modal-exp"></p>
-          </div>
+
           <div>
-            <span class="text-gray-500 block text-xs uppercase tracking-widest mb-1">Portfolio / Links</span>
-            <a href="#" id="modal-portfolio" target="_blank" class="text-blue-600 hover:underline font-bold text-sm">View Portfolio</a>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Description / Requirements *</label>
+            <textarea id="j-desc" class="w-full px-3 py-2 border rounded outline-none h-32" required></textarea>
           </div>
-        </div>
 
-        <hr class="border-gray-200">
-        
-        <div class="bg-[#001f3f] text-white p-6 rounded-xl">
-          <p class="text-xs uppercase tracking-widest text-gray-400 mb-2">Electronic Signature</p>
-          <p class="font-serif italic text-2xl" id="modal-signature"></p>
-          <p class="text-xs text-gray-400 mt-2">All compliance acknowledgements checked & verified during submission.</p>
-        </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">External Application Link <span class="font-normal text-gray-400">(Optional)</span></label>
+            <p class="text-[10px] text-gray-500 mb-1">If filled, applicants will be redirected to this URL instead of the TNG form.</p>
+            <input type="url" id="j-link" placeholder="https://..." class="w-full px-3 py-2 border rounded outline-none">
+          </div>
 
+          <div class="flex items-center mt-4 bg-gray-50 p-3 rounded border border-gray-200">
+            <input type="checkbox" id="j-active" class="w-5 h-5 text-[#a6192e] rounded mr-3" checked>
+            <label for="j-active" class="text-sm font-bold text-gray-800 cursor-pointer">Publish Immediately (Active)</label>
+          </div>
+        </form>
+      </div>
+
+      <div class="p-4 bg-gray-100 border-t border-gray-200 flex justify-end space-x-3">
+        <button onclick="closeJobModal()" class="px-4 py-2 bg-white border border-gray-300 rounded font-bold text-gray-600 hover:bg-gray-50">Cancel</button>
+        <button onclick="saveJob()" id="save-job-btn" class="px-6 py-2 bg-[#001f3f] text-white rounded font-bold hover:bg-blue-900 shadow">Save Job Posting</button>
       </div>
     </div>
   </div>
@@ -205,6 +267,7 @@
   <script>
     let supabaseClient = null;
     let globalApplications = [];
+    let globalJobs = [];
     let currentAppId = null;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -215,224 +278,218 @@
             'https://hicowukbjsbpuebquqbh.supabase.co', 
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpY293dWtianNicHVlYnF1cWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzgyNzQsImV4cCI6MjA4NzU1NDI3NH0.sz7ZNU3-WcsskIaHC5Cjs_-WVmXLtYR15Iy8VGi8ch0'
           );
-          
           checkSession();
-
-          // Auth State Listener
           supabaseClient.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN') {
-              loadDashboard(session.user);
-            } else if (event === 'SIGNED_OUT') {
-              showLogin();
-            }
+            if (event === 'SIGNED_IN') loadDashboard(session.user);
+            else if (event === 'SIGNED_OUT') showLogin();
           });
         }
       }, 100);
     });
 
-    // --- AUTHENTICATION LOGIC ---
+    // --- AUTHENTICATION ---
     async function checkSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session) {
-        loadDashboard(session.user);
-      } else {
-        showLogin();
-      }
+      if (session) loadDashboard(session.user);
+      else showLogin();
     }
-
     function showLogin() {
       document.getElementById('dashboard-view').classList.add('hidden');
       document.getElementById('login-view').classList.remove('hidden', 'opacity-0');
     }
-
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
       const btn = document.getElementById('login-btn');
       const err = document.getElementById('login-error');
-      
       btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i>`;
       err.classList.add('hidden');
-
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) {
         err.innerText = error.message;
         err.classList.remove('hidden');
         btn.innerHTML = `Authenticate <i class="fa-solid fa-lock ml-2"></i>`;
       }
     });
+    document.getElementById('logout-btn').addEventListener('click', async () => await supabaseClient.auth.signOut());
 
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-    });
+    // --- UI NAVIGATION ---
+    function switchTab(tab) {
+      document.getElementById('view-apps').classList.add('hidden');
+      document.getElementById('view-jobs').classList.add('hidden');
+      document.getElementById('tab-btn-apps').className = "w-full text-left px-4 py-3 hover:bg-white/10 rounded text-sm font-bold transition-colors text-gray-300 hover:text-white";
+      document.getElementById('tab-btn-jobs').className = "w-full text-left px-4 py-3 hover:bg-white/10 rounded text-sm font-bold transition-colors text-gray-300 hover:text-white";
+      
+      if(tab === 'apps') {
+        document.getElementById('view-apps').classList.remove('hidden');
+        document.getElementById('tab-btn-apps').className = "w-full text-left px-4 py-3 bg-[#a6192e] text-white rounded text-sm font-bold shadow transition-colors";
+        document.getElementById('header-title').innerText = "Applicant Tracking System";
+        fetchApplications();
+      } else {
+        document.getElementById('view-jobs').classList.remove('hidden');
+        document.getElementById('tab-btn-jobs').className = "w-full text-left px-4 py-3 bg-[#a6192e] text-white rounded text-sm font-bold shadow transition-colors";
+        document.getElementById('header-title').innerText = "Job Directory Management";
+        fetchJobs();
+      }
+    }
 
-    // --- DASHBOARD LOGIC ---
     async function loadDashboard(user) {
       document.getElementById('login-view').classList.add('opacity-0', 'hidden');
       document.getElementById('dashboard-view').classList.remove('hidden');
-
-      // Fetch HR Profile using their Auth ID
-      const { data: profile, error } = await supabaseClient
-        .from('hr_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
+      const { data: profile } = await supabaseClient.from('hr_profiles').select('*').eq('id', user.id).single();
       if (profile) {
         document.getElementById('hr-name').innerText = profile.full_name;
         document.getElementById('hr-position').innerText = profile.position;
-        if(profile.avatar_url) {
-          document.getElementById('hr-avatar').src = profile.avatar_url;
-        }
-      } else {
-        document.getElementById('hr-name').innerText = "System Admin";
-        document.getElementById('hr-position').innerText = user.email;
+        if(profile.avatar_url) document.getElementById('hr-avatar').src = profile.avatar_url;
       }
-
       fetchApplications();
     }
 
-    // --- ATS LOGIC ---
+    // --- APPLICATIONS DATA ---
     async function fetchApplications() {
-      const tbody = document.getElementById('applications-table');
-      tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-400 font-bold"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Syncing...</td></tr>`;
-      
-      const { data, error } = await supabaseClient
-        .from('job_applications')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-bold">Error loading applications. Check Database permissions.</td></tr>`;
-        return;
-      }
-
-      globalApplications = data;
-      renderTable();
-      updateStats();
+      const { data, error } = await supabaseClient.from('job_applications').select('*').order('created_at', { ascending: false });
+      if (!error) { globalApplications = data; renderAppTable(); }
     }
-
-    function renderTable() {
+    function renderAppTable() {
       const tbody = document.getElementById('applications-table');
-      if (globalApplications.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold">Inbox is currently empty.</td></tr>`;
-        return;
-      }
-
+      if (globalApplications.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold">Inbox is empty.</td></tr>`; return; }
       let html = '';
       globalApplications.forEach(app => {
-        let statusBadge = '';
-        if(app.status === 'Pending') statusBadge = '<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px] font-bold uppercase tracking-wider">Pending</span>';
-        if(app.status === 'Interviewing') statusBadge = '<span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-bold uppercase tracking-wider">Interviewing</span>';
-        if(app.status === 'Rejected') statusBadge = '<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-[10px] font-bold uppercase tracking-wider">Rejected</span>';
-        if(app.status === 'Hired') statusBadge = '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase tracking-wider">Hired</span>';
+        let badge = `<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px] font-bold uppercase">Pending</span>`;
+        if(app.status==='Hired') badge = `<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase">Hired</span>`;
+        if(app.status==='Rejected') badge = `<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-[10px] font-bold uppercase">Rejected</span>`;
+        html += `<tr class="border-b border-gray-100">
+          <td class="p-4 font-bold text-[#001f3f]">${app.full_name}</td>
+          <td class="p-4">${app.job_title}</td>
+          <td class="p-4 text-xs font-bold text-gray-500">${app.company}</td>
+          <td class="p-4 text-sm">${new Date(app.created_at).toLocaleDateString()}</td>
+          <td class="p-4">${badge}</td>
+          <td class="p-4 text-right"><button onclick="openAppModal('${app.id}')" class="bg-[#001f3f] text-white px-3 py-1.5 rounded text-xs font-bold">Review</button></td>
+        </tr>`;
+      });
+      tbody.innerHTML = html;
+      document.getElementById('stat-total').innerText = globalApplications.length;
+      document.getElementById('stat-pending').innerText = globalApplications.filter(a => a.status === 'Pending').length;
+      document.getElementById('stat-hired').innerText = globalApplications.filter(a => a.status === 'Hired').length;
+    }
 
-        const date = new Date(app.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-
-        html += `
-          <tr class="hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0">
-            <td class="p-4"><p class="font-bold text-[#001f3f]">${app.full_name}</p><p class="text-xs text-gray-400">${app.email}</p></td>
-            <td class="p-4 font-bold text-gray-700">${app.job_title}</td>
-            <td class="p-4 text-xs text-gray-500 uppercase tracking-wider font-semibold">${app.company}</td>
-            <td class="p-4 text-gray-500 text-sm">${date}</td>
-            <td class="p-4">${statusBadge}</td>
-            <td class="p-4 text-right">
-              <button onclick="openModal('${app.id}')" class="bg-[#001f3f] hover:bg-blue-900 text-white px-4 py-2 rounded text-xs font-bold transition-colors shadow-sm">Review File</button>
-            </td>
-          </tr>
-        `;
+    // --- JOBS DATA (CREATE/EDIT) ---
+    async function fetchJobs() {
+      const { data, error } = await supabaseClient.from('job_postings').select('*').order('created_at', { ascending: false });
+      if (!error) { globalJobs = data; renderJobsTable(); }
+    }
+    
+    function renderJobsTable() {
+      const tbody = document.getElementById('jobs-table');
+      if (globalJobs.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 font-bold">No jobs created yet.</td></tr>`; return; }
+      let html = '';
+      globalJobs.forEach(job => {
+        let activeBadge = job.is_active 
+          ? `<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase"><i class="fa-solid fa-circle text-[8px] mr-1"></i> Active</span>`
+          : `<span class="px-2 py-1 bg-gray-200 text-gray-600 rounded text-[10px] font-bold uppercase">Draft / Closed</span>`;
+        html += `<tr class="border-b border-gray-100 hover:bg-gray-50">
+          <td class="p-4 font-bold text-[#001f3f]">${job.title}</td>
+          <td class="p-4 text-xs font-bold text-gray-500">${job.company}</td>
+          <td class="p-4 text-sm">${job.location} • ${job.employment_type}</td>
+          <td class="p-4">${activeBadge}</td>
+          <td class="p-4 text-right">
+            <button onclick="toggleJobStatus('${job.id}', ${job.is_active})" class="text-gray-500 hover:text-blue-600 mr-3" title="Toggle Status"><i class="fa-solid fa-power-off"></i></button>
+            <button onclick="openJobModal('${job.id}')" class="text-gray-500 hover:text-blue-600 mr-3" title="Edit"><i class="fa-solid fa-pen"></i></button>
+            <button onclick="deleteJob('${job.id}')" class="text-gray-500 hover:text-red-600" title="Delete"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`;
       });
       tbody.innerHTML = html;
     }
 
-    function updateStats() {
-      document.getElementById('stat-total').innerText = globalApplications.length;
-      document.getElementById('stat-pending').innerText = globalApplications.filter(a => a.status === 'Pending').length;
-      document.getElementById('stat-interviewing').innerText = globalApplications.filter(a => a.status === 'Interviewing').length;
-      document.getElementById('stat-hired').innerText = globalApplications.filter(a => a.status === 'Hired').length;
+    function openJobModal(id = null) {
+      const modal = document.getElementById('job-modal');
+      const form = document.getElementById('job-form');
+      form.reset();
+      document.getElementById('edit-job-id').value = '';
+      document.getElementById('job-modal-title').innerText = "Create New Job Posting";
+
+      if (id) {
+        const job = globalJobs.find(j => j.id === id);
+        if (job) {
+          document.getElementById('job-modal-title').innerText = "Edit Job Posting";
+          document.getElementById('edit-job-id').value = job.id;
+          document.getElementById('j-title').value = job.title;
+          document.getElementById('j-company').value = job.company;
+          document.getElementById('j-location').value = job.location;
+          document.getElementById('j-type').value = job.employment_type;
+          document.getElementById('j-desc').value = job.description;
+          document.getElementById('j-link').value = job.external_link || '';
+          document.getElementById('j-active').checked = job.is_active;
+        }
+      }
+      modal.classList.remove('hidden');
     }
 
-    function openModal(id) {
+    function closeJobModal() { document.getElementById('job-modal').classList.add('hidden'); }
+
+    async function saveJob() {
+      if(!document.getElementById('j-title').value || !document.getElementById('j-company').value) return alert("Title and Company required");
+      const btn = document.getElementById('save-job-btn');
+      btn.innerText = "Saving...";
+      
+      const payload = {
+        title: document.getElementById('j-title').value,
+        company: document.getElementById('j-company').value,
+        location: document.getElementById('j-location').value,
+        employment_type: document.getElementById('j-type').value,
+        description: document.getElementById('j-desc').value,
+        external_link: document.getElementById('j-link').value || null,
+        is_active: document.getElementById('j-active').checked
+      };
+
+      const id = document.getElementById('edit-job-id').value;
+      if (id) {
+        await supabaseClient.from('job_postings').update(payload).eq('id', id);
+      } else {
+        await supabaseClient.from('job_postings').insert([payload]);
+      }
+      
+      btn.innerText = "Save Job Posting";
+      closeJobModal();
+      fetchJobs();
+    }
+
+    async function toggleJobStatus(id, currentStatus) {
+      await supabaseClient.from('job_postings').update({ is_active: !currentStatus }).eq('id', id);
+      fetchJobs();
+    }
+
+    async function deleteJob(id) {
+      if(confirm("Are you sure you want to permanently delete this job posting?")) {
+        await supabaseClient.from('job_postings').delete().eq('id', id);
+        fetchJobs();
+      }
+    }
+
+    // --- APP MODAL UTILS ---
+    function openAppModal(id) {
       const app = globalApplications.find(a => a.id === id);
       if(!app) return;
       currentAppId = id;
-
       document.getElementById('modal-name').innerText = app.full_name;
-      document.getElementById('modal-role').innerText = `${app.job_title} • ${app.company}`;
       document.getElementById('modal-email').innerText = app.email;
-      document.getElementById('modal-discord').innerText = `${app.discord_username} (ID: ${app.discord_id})`;
-      document.getElementById('modal-location').innerText = `${app.country_residency} ${app.nationality ? '('+app.nationality+')' : ''}`;
-      document.getElementById('modal-dob').innerText = app.date_of_birth;
-      
-      if(app.roblox_username) {
-        document.getElementById('modal-roblox-wrap').classList.remove('hidden');
-        document.getElementById('modal-roblox').innerText = app.roblox_username;
-      } else {
-        document.getElementById('modal-roblox-wrap').classList.add('hidden');
-      }
-
-      document.getElementById('modal-q1').innerText = app.why_this_role || 'No response';
-      document.getElementById('modal-q2').innerText = app.strengths || 'No response';
-      document.getElementById('modal-q3').innerText = app.biggest_accomplishment || 'No response';
-      document.getElementById('modal-q4').innerText = app.teamwork_example || 'No response';
-      document.getElementById('modal-q5').innerText = app.why_hire_you || 'No response';
-      document.getElementById('modal-q6').innerText = app.career_goals || 'No response';
-
-      document.getElementById('modal-source').innerText = app.source || 'Unknown';
-      document.getElementById('modal-start').innerText = app.start_date || 'Unknown';
-      document.getElementById('modal-legal').innerHTML = app.legal_to_work ? '<span class="text-green-600">Verified</span>' : '<span class="text-red-600">No</span>';
-      document.getElementById('modal-remote').innerHTML = app.remote_comfortable ? '<span class="text-green-600">Yes</span>' : '<span class="text-red-600">No</span>';
-      document.getElementById('modal-exp').innerText = app.work_experience || 'None listed';
-      
-      const portBtn = document.getElementById('modal-portfolio');
-      if(app.portfolio_links) {
-        portBtn.href = app.portfolio_links.startsWith('http') ? app.portfolio_links : `https://${app.portfolio_links}`;
-        portBtn.innerText = "Open Portfolio Link";
-        portBtn.style.display = "inline-block";
-      } else {
-        portBtn.style.display = "none";
-      }
-
-      document.getElementById('modal-signature').innerText = app.electronic_signature;
-
-      const modal = document.getElementById('applicant-modal');
-      const content = document.getElementById('modal-content');
-      modal.classList.remove('hidden');
-      setTimeout(() => content.classList.remove('translate-x-full'), 10);
+      document.getElementById('modal-q1').innerText = app.why_this_role || 'N/A';
+      document.getElementById('modal-q2').innerText = app.strengths || 'N/A';
+      document.getElementById('applicant-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('app-modal-content').classList.remove('translate-x-full'), 10);
     }
-
-    function closeModal() {
-      const modal = document.getElementById('applicant-modal');
-      const content = document.getElementById('modal-content');
-      content.classList.add('translate-x-full');
-      setTimeout(() => modal.classList.add('hidden'), 300);
+    function closeAppModal() {
+      document.getElementById('app-modal-content').classList.add('translate-x-full');
+      setTimeout(() => document.getElementById('applicant-modal').classList.add('hidden'), 300);
       currentAppId = null;
     }
-
     async function updateStatus(newStatus) {
       if(!currentAppId) return;
-      const btn = event.target;
-      const originalText = btn.innerText;
-      btn.innerText = "Saving...";
-      
-      const { error } = await supabaseClient
-        .from('job_applications')
-        .update({ status: newStatus })
-        .eq('id', currentAppId);
-        
-      if(!error) {
-        btn.innerText = "Saved!";
-        setTimeout(() => btn.innerText = originalText, 1000);
-        const app = globalApplications.find(a => a.id === currentAppId);
-        if(app) app.status = newStatus;
-        renderTable();
-        updateStats();
-      } else {
-        btn.innerText = "Error";
-        setTimeout(() => btn.innerText = originalText, 2000);
-      }
+      await supabaseClient.from('job_applications').update({ status: newStatus }).eq('id', currentAppId);
+      fetchApplications();
+      closeAppModal();
     }
   </script>
 </body>
