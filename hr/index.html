@@ -3,107 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HR Command Center | Tyler Nicholas Group</title>
+  <title>Secure HR Command Center | TNG</title>
   <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
   
   <style> body { opacity: 0; visibility: hidden; } </style>
-  <script> 
-    // Basic Security Gate (Password is: TNG-HR-2026)
-    const auth = sessionStorage.getItem('tng_hr_auth');
-    if (!auth) {
-      const pass = prompt("SECURE PORTAL: Enter HR Authorization Key");
-      if (pass === "TNG-HR-2026") {
-        sessionStorage.setItem('tng_hr_auth', 'true');
-      } else {
-        document.body.innerHTML = "<div style='display:flex; height:100vh; align-items:center; justify-content:center; background:#001f3f; color:white; font-family:sans-serif;'><h1>403 - UNAUTHORIZED ACCESS</h1></div>";
-        throw new Error("Unauthorized");
-      }
-    }
-    window.addEventListener('load', function() { document.body.style.transition = 'opacity 0.2s ease-in'; document.body.style.opacity = '1'; document.body.style.visibility = 'visible'; }); 
-  </script>
+  <script> window.addEventListener('load', function() { document.body.style.transition = 'opacity 0.2s ease-in'; document.body.style.opacity = '1'; document.body.style.visibility = 'visible'; }); </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
-<body class="bg-gray-50 font-sans text-gray-900 flex h-screen overflow-hidden">
+<body class="bg-gray-50 font-sans text-gray-900 h-screen overflow-hidden flex">
 
-  <aside class="w-64 bg-[#001f3f] text-white flex flex-col shadow-2xl z-20 hidden md:flex">
-    <div class="p-6 border-b border-blue-900 text-center">
-      <h1 class="text-xl font-bold uppercase tracking-widest">TNG HR</h1>
-      <p class="text-[10px] text-gray-400 uppercase tracking-widest mt-1">Command Center</p>
-    </div>
-    <div class="p-6 flex flex-col items-center border-b border-blue-900">
-      <img src="https://emiratesgrouproblox.link/images/williama.png" alt="William Cross" class="w-16 h-16 rounded-full border-2 border-[#a6192e] mb-3 object-cover bg-white">
-      <p class="text-sm font-bold">William Cross</p>
-      <p class="text-[10px] text-gray-400 uppercase">Chief Human Resources</p>
-    </div>
-    <nav class="flex-grow p-4 space-y-2">
-      <a href="#" class="block px-4 py-3 bg-[#a6192e] rounded text-sm font-bold shadow"><i class="fa-solid fa-users mr-3"></i> Applications</a>
-      <a href="../" class="block px-4 py-3 hover:bg-white/10 rounded text-sm transition-colors"><i class="fa-solid fa-briefcase mr-3"></i> View Live Jobs</a>
-    </nav>
-    <div class="p-4 border-t border-blue-900">
-      <button onclick="sessionStorage.removeItem('tng_hr_auth'); window.location.reload();" class="w-full text-left px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors"><i class="fa-solid fa-lock mr-3"></i> Secure Logout</button>
-    </div>
-  </aside>
-
-  <main class="flex-grow flex flex-col h-screen overflow-hidden bg-gray-100">
-    
-    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center z-10">
-      <h2 class="text-xl font-bold text-[#001f3f]">Applicant Tracking System</h2>
-      <div class="flex items-center space-x-4">
-        <span class="text-sm font-bold text-gray-500"><i class="fa-solid fa-circle text-green-500 text-[10px] mr-1"></i> Database Connected</span>
-      </div>
-    </header>
-
-    <div class="flex-grow p-8 overflow-y-auto">
+  <div id="login-view" class="fixed inset-0 z-50 bg-[#001f3f] flex items-center justify-center p-6 transition-opacity duration-500">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-2 bg-[#a6192e]"></div>
       
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total Applications</p>
-          <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-total">0</h3>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-yellow-500">
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Pending Review</p>
-          <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-pending">0</h3>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-purple-500">
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Interviewing</p>
-          <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-interviewing">0</h3>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-green-500">
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Hired</p>
-          <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-hired">0</h3>
-        </div>
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-[#001f3f] tracking-tighter uppercase">TNG HR</h1>
+        <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">Authorized Personnel Only</p>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-        <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-          <h3 class="font-bold text-[#001f3f]"><i class="fa-solid fa-inbox mr-2"></i> Application Inbox</h3>
-          <button onclick="fetchApplications()" class="text-sm bg-white border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-100"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+      <form id="login-form" class="space-y-6">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">Corporate Email</label>
+          <input type="email" id="login-email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] outline-none" required>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm whitespace-nowrap">
-            <thead class="bg-white border-b border-gray-200 text-gray-500 uppercase text-[10px] tracking-wider">
-              <tr>
-                <th class="p-4 font-bold">Candidate</th>
-                <th class="p-4 font-bold">Target Role</th>
-                <th class="p-4 font-bold">Company</th>
-                <th class="p-4 font-bold">Applied On</th>
-                <th class="p-4 font-bold">Status</th>
-                <th class="p-4 font-bold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="applications-table" class="divide-y divide-gray-100 text-gray-700">
-              <tr><td colspan="6" class="p-8 text-center text-gray-400 font-bold"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Syncing with TNG Database...</td></tr>
-            </tbody>
-          </table>
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">Passcode</label>
+          <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] outline-none" required>
         </div>
-      </div>
+        
+        <div id="login-error" class="hidden text-red-600 text-sm font-bold text-center bg-red-50 p-3 rounded"></div>
 
+        <button type="submit" id="login-btn" class="w-full bg-[#001f3f] hover:bg-blue-900 text-white font-bold py-4 rounded-lg shadow-lg transition-colors uppercase tracking-widest flex justify-center items-center">
+          Authenticate <i class="fa-solid fa-lock ml-2"></i>
+        </button>
+      </form>
     </div>
-  </main>
+  </div>
+
+  <div id="dashboard-view" class="hidden w-full h-full flex">
+    
+    <aside class="w-64 bg-[#001f3f] text-white flex flex-col shadow-2xl z-20 hidden md:flex">
+      <div class="p-6 border-b border-blue-900 text-center">
+        <h1 class="text-xl font-bold uppercase tracking-widest">TNG HR</h1>
+        <p class="text-[10px] text-gray-400 uppercase tracking-widest mt-1">Command Center</p>
+      </div>
+      
+      <div class="p-6 flex flex-col items-center border-b border-blue-900 text-center">
+        <img id="hr-avatar" src="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" alt="HR Profile" class="w-16 h-16 rounded-full border-2 border-[#a6192e] mb-3 object-cover bg-white shadow-md">
+        <p id="hr-name" class="text-sm font-bold">Authenticating...</p>
+        <p id="hr-position" class="text-[10px] text-gray-400 uppercase mt-1">Fetching Profile</p>
+      </div>
+      
+      <nav class="flex-grow p-4 space-y-2">
+        <a href="#" class="block px-4 py-3 bg-[#a6192e] rounded text-sm font-bold shadow"><i class="fa-solid fa-users mr-3"></i> Applications</a>
+        <a href="../" class="block px-4 py-3 hover:bg-white/10 rounded text-sm transition-colors"><i class="fa-solid fa-briefcase mr-3"></i> View Live Jobs</a>
+      </nav>
+      
+      <div class="p-4 border-t border-blue-900">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors flex items-center">
+          <i class="fa-solid fa-arrow-right-from-bracket mr-3"></i> Terminate Session
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-grow flex flex-col h-screen overflow-hidden bg-gray-100">
+      <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center z-10">
+        <h2 class="text-xl font-bold text-[#001f3f]">Applicant Tracking System</h2>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-bold text-gray-500"><i class="fa-solid fa-circle text-green-500 text-[10px] mr-1"></i> Database Connected</span>
+        </div>
+      </header>
+
+      <div class="flex-grow p-8 overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total Applications</p>
+            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-total">0</h3>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-yellow-500">
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Pending Review</p>
+            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-pending">0</h3>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-purple-500">
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Interviewing</p>
+            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-interviewing">0</h3>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-green-500">
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Hired</p>
+            <h3 class="text-3xl font-bold text-[#001f3f]" id="stat-hired">0</h3>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+          <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+            <h3 class="font-bold text-[#001f3f]"><i class="fa-solid fa-inbox mr-2"></i> Application Inbox</h3>
+            <button onclick="fetchApplications()" class="text-sm bg-white border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-100 shadow-sm font-bold text-gray-700"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+              <thead class="bg-white border-b border-gray-200 text-gray-500 uppercase text-[10px] tracking-wider">
+                <tr>
+                  <th class="p-4 font-bold">Candidate</th>
+                  <th class="p-4 font-bold">Target Role</th>
+                  <th class="p-4 font-bold">Company</th>
+                  <th class="p-4 font-bold">Applied On</th>
+                  <th class="p-4 font-bold">Status</th>
+                  <th class="p-4 font-bold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="applications-table" class="divide-y divide-gray-100 text-gray-700">
+                <tr><td colspan="6" class="p-8 text-center text-gray-400 font-bold"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Loading Data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <div id="applicant-modal" class="fixed inset-0 z-[100] bg-black/60 hidden flex justify-end transition-opacity">
     <div class="w-full md:w-2/3 lg:w-1/2 bg-white h-full shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-full" id="modal-content">
@@ -116,7 +136,7 @@
         <button onclick="closeModal()" class="text-white hover:text-gray-300 text-2xl"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="bg-gray-100 p-4 border-b border-gray-200 flex justify-between items-center">
+      <div class="bg-gray-100 p-4 border-b border-gray-200 flex justify-between items-center sticky top-[88px] z-10 shadow-sm">
         <span class="text-sm font-bold text-gray-600">Update Status:</span>
         <div class="flex space-x-2">
           <button onclick="updateStatus('Pending')" class="px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded border border-yellow-200 hover:bg-yellow-200">Pending</button>
@@ -141,30 +161,12 @@
         <div>
           <h3 class="text-lg font-bold text-[#001f3f] mb-4 uppercase tracking-widest border-l-4 border-[#a6192e] pl-3">Written Assessment</h3>
           <div class="space-y-6 text-sm">
-            <div>
-              <p class="font-bold text-gray-800 mb-1">Why do you want this role/company?</p>
-              <p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q1"></p>
-            </div>
-            <div>
-              <p class="font-bold text-gray-800 mb-1">What strengths do you bring?</p>
-              <p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q2"></p>
-            </div>
-            <div>
-              <p class="font-bold text-gray-800 mb-1">Biggest accomplishment / challenge overcome?</p>
-              <p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q3"></p>
-            </div>
-            <div>
-              <p class="font-bold text-gray-800 mb-1">Teamwork / Leadership Example:</p>
-              <p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q4"></p>
-            </div>
-            <div>
-              <p class="font-bold text-gray-800 mb-1">Why should we hire you?</p>
-              <p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q5"></p>
-            </div>
-            <div>
-              <p class="font-bold text-gray-800 mb-1">Career Goals:</p>
-              <p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q6"></p>
-            </div>
+            <div><p class="font-bold text-gray-800 mb-1">Why do you want this role/company?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q1"></p></div>
+            <div><p class="font-bold text-gray-800 mb-1">What strengths do you bring?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q2"></p></div>
+            <div><p class="font-bold text-gray-800 mb-1">Biggest accomplishment / challenge overcome?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q3"></p></div>
+            <div><p class="font-bold text-gray-800 mb-1">Teamwork / Leadership Example:</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q4"></p></div>
+            <div><p class="font-bold text-gray-800 mb-1">Why should we hire you?</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q5"></p></div>
+            <div><p class="font-bold text-gray-800 mb-1">Career Goals:</p><p class="text-gray-600 bg-gray-50 p-4 rounded border border-gray-100 whitespace-pre-wrap" id="modal-q6"></p></div>
           </div>
         </div>
 
@@ -201,9 +203,9 @@
   </div>
 
   <script>
+    let supabaseClient = null;
     let globalApplications = [];
     let currentAppId = null;
-    let supabaseClient = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       const checkSupabase = setInterval(() => {
@@ -213,11 +215,86 @@
             'https://hicowukbjsbpuebquqbh.supabase.co', 
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpY293dWtianNicHVlYnF1cWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzgyNzQsImV4cCI6MjA4NzU1NDI3NH0.sz7ZNU3-WcsskIaHC5Cjs_-WVmXLtYR15Iy8VGi8ch0'
           );
-          fetchApplications();
+          
+          checkSession();
+
+          // Auth State Listener
+          supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+              loadDashboard(session.user);
+            } else if (event === 'SIGNED_OUT') {
+              showLogin();
+            }
+          });
         }
       }, 100);
     });
 
+    // --- AUTHENTICATION LOGIC ---
+    async function checkSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        loadDashboard(session.user);
+      } else {
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.getElementById('login-view').classList.remove('hidden', 'opacity-0');
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('login-error');
+      
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i>`;
+      err.classList.add('hidden');
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        err.innerText = error.message;
+        err.classList.remove('hidden');
+        btn.innerHTML = `Authenticate <i class="fa-solid fa-lock ml-2"></i>`;
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+    });
+
+    // --- DASHBOARD LOGIC ---
+    async function loadDashboard(user) {
+      document.getElementById('login-view').classList.add('opacity-0', 'hidden');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+
+      // Fetch HR Profile using their Auth ID
+      const { data: profile, error } = await supabaseClient
+        .from('hr_profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profile) {
+        document.getElementById('hr-name').innerText = profile.full_name;
+        document.getElementById('hr-position').innerText = profile.position;
+        if(profile.avatar_url) {
+          document.getElementById('hr-avatar').src = profile.avatar_url;
+        }
+      } else {
+        document.getElementById('hr-name').innerText = "System Admin";
+        document.getElementById('hr-position').innerText = user.email;
+      }
+
+      fetchApplications();
+    }
+
+    // --- ATS LOGIC ---
     async function fetchApplications() {
       const tbody = document.getElementById('applications-table');
       tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-400 font-bold"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Syncing...</td></tr>`;
@@ -228,7 +305,7 @@
         .order('created_at', { ascending: false });
 
       if (error) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-bold">Error loading applications.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-bold">Error loading applications. Check Database permissions.</td></tr>`;
         return;
       }
 
@@ -246,7 +323,6 @@
 
       let html = '';
       globalApplications.forEach(app => {
-        
         let statusBadge = '';
         if(app.status === 'Pending') statusBadge = '<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px] font-bold uppercase tracking-wider">Pending</span>';
         if(app.status === 'Interviewing') statusBadge = '<span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-bold uppercase tracking-wider">Interviewing</span>';
@@ -283,11 +359,8 @@
       if(!app) return;
       currentAppId = id;
 
-      // Header
       document.getElementById('modal-name').innerText = app.full_name;
       document.getElementById('modal-role').innerText = `${app.job_title} • ${app.company}`;
-      
-      // Quick Info
       document.getElementById('modal-email').innerText = app.email;
       document.getElementById('modal-discord').innerText = `${app.discord_username} (ID: ${app.discord_id})`;
       document.getElementById('modal-location').innerText = `${app.country_residency} ${app.nationality ? '('+app.nationality+')' : ''}`;
@@ -300,7 +373,6 @@
         document.getElementById('modal-roblox-wrap').classList.add('hidden');
       }
 
-      // Assessment
       document.getElementById('modal-q1').innerText = app.why_this_role || 'No response';
       document.getElementById('modal-q2').innerText = app.strengths || 'No response';
       document.getElementById('modal-q3').innerText = app.biggest_accomplishment || 'No response';
@@ -308,7 +380,6 @@
       document.getElementById('modal-q5').innerText = app.why_hire_you || 'No response';
       document.getElementById('modal-q6').innerText = app.career_goals || 'No response';
 
-      // Logistics
       document.getElementById('modal-source').innerText = app.source || 'Unknown';
       document.getElementById('modal-start').innerText = app.start_date || 'Unknown';
       document.getElementById('modal-legal').innerHTML = app.legal_to_work ? '<span class="text-green-600">Verified</span>' : '<span class="text-red-600">No</span>';
@@ -324,10 +395,8 @@
         portBtn.style.display = "none";
       }
 
-      // Sign-off
       document.getElementById('modal-signature').innerText = app.electronic_signature;
 
-      // UI Reveal
       const modal = document.getElementById('applicant-modal');
       const content = document.getElementById('modal-content');
       modal.classList.remove('hidden');
@@ -344,7 +413,6 @@
 
     async function updateStatus(newStatus) {
       if(!currentAppId) return;
-      
       const btn = event.target;
       const originalText = btn.innerText;
       btn.innerText = "Saving...";
@@ -357,8 +425,6 @@
       if(!error) {
         btn.innerText = "Saved!";
         setTimeout(() => btn.innerText = originalText, 1000);
-        
-        // Update local state and UI
         const app = globalApplications.find(a => a.id === currentAppId);
         if(app) app.status = newStatus;
         renderTable();
