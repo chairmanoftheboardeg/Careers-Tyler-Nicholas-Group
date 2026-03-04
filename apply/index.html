@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Center | Tyler Nicholas Group</title>
+  <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
+  
+  <style> body { opacity: 0; visibility: hidden; } </style>
+  <script> window.addEventListener('load', function() { document.body.style.transition = 'opacity 0.2s ease-in'; document.body.style.opacity = '1'; document.body.style.visibility = 'visible'; }); </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../../style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen">
+
+  <nav class="bg-[#001f3f] text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-md relative z-50">
+    <div class="font-bold text-xl tracking-wider uppercase">TNG Careers Portal</div>
+    <div class="hidden md:flex space-x-6 text-sm items-center font-bold">
+      <a href="../" class="hover:text-gray-300 transition-colors"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Jobs</a>
+    </div>
+  </nav>
+
+  <div class="bg-[#001f3f] text-white py-12 px-6 md:px-12 text-center border-b-4 border-[#a6192e]">
+    <h1 class="text-3xl md:text-5xl font-bold mb-3">Candidate Application</h1>
+    <p class="text-gray-300 max-w-2xl mx-auto md:text-lg">Please complete all required fields accurately. Your application will be reviewed by the TNG Human Resources Executive Board.</p>
+  </div>
+
+  <main class="flex-grow max-w-4xl mx-auto py-12 px-6 w-full">
+    
+    <div id="form-success" class="hidden bg-green-100 border-l-4 border-green-500 text-green-700 p-6 rounded shadow-md mb-8">
+      <h3 class="font-bold text-lg mb-1"><i class="fa-solid fa-circle-check mr-2"></i> Application Submitted Successfully</h3>
+      <p>Thank you for applying to the Tyler Nicholas Group. Our HR department has securely received your profile and will be in touch regarding the next steps.</p>
+      <a href="../" class="inline-block mt-4 bg-green-700 text-white font-bold py-2 px-6 rounded text-sm hover:bg-green-800">Return to Job Listings</a>
+    </div>
+
+    <form id="application-form" class="space-y-10 bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-gray-200">
+      
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b pb-2 uppercase tracking-widest text-xs">Target Position</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label class="block text-gray-700 text-xs font-bold mb-1">Company / Subsidiary</label>
+            <input type="text" id="app-company" class="w-full px-4 py-2 bg-gray-200 border rounded text-gray-600 font-bold cursor-not-allowed" readonly required>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-xs font-bold mb-1">Job Title</label>
+            <input type="text" id="app-title" class="w-full px-4 py-2 bg-gray-200 border rounded text-gray-600 font-bold cursor-not-allowed" readonly required>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-xs font-bold mb-1">Employment Type</label>
+            <input type="text" id="app-type" class="w-full px-4 py-2 bg-gray-200 border rounded text-gray-600 font-bold cursor-not-allowed" readonly required>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">1. Personal Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Full Name *</label>
+            <p class="text-[10px] text-gray-500 mb-1">First Name, Last Name, and Middle Initial Only.</p>
+            <input type="text" id="full-name" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Preferred Name</label>
+            <p class="text-[10px] text-gray-500 mb-1">If you prefer we use a different name to address you.</p>
+            <input type="text" id="preferred-name" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Email Address *</label>
+            <input type="email" id="email" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Date of Birth *</label>
+            <p class="text-[10px] text-gray-500 mb-1">You must be 13+ to be employed by TNG or its subsidiaries.</p>
+            <input type="date" id="dob" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Country of Residency *</label>
+            <p class="text-[10px] text-gray-500 mb-1">Do not type full address. Only the country.</p>
+            <input type="text" id="country" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Nationality</label>
+            <p class="text-[10px] text-gray-500 mb-1">Keep empty if same as country of residency.</p>
+            <input type="text" id="nationality" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-blue-50 p-4 rounded border border-blue-100">
+            <label class="block text-[#001f3f] text-sm font-bold mb-1"><i class="fa-brands fa-discord mr-1"></i> Discord Username *</label>
+            <p class="text-[10px] text-gray-600 mb-2">A Discord account is strictly required to participate.</p>
+            <input type="text" id="discord-user" placeholder="e.g. tyler_n" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+          <div class="bg-blue-50 p-4 rounded border border-blue-100">
+            <label class="block text-[#001f3f] text-sm font-bold mb-1"><i class="fa-brands fa-discord mr-1"></i> Discord ID *</label>
+            <p class="text-[10px] text-gray-600 mb-2">Enable developer mode in settings to copy your ID.</p>
+            <input type="text" id="discord-id" placeholder="e.g. 123456789012345678" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+        </div>
+
+        <div id="roblox-wrapper" class="hidden mt-6 bg-gray-100 p-4 rounded border border-gray-300">
+          <label class="block text-gray-800 text-sm font-bold mb-1">Roblox Username *</label>
+          <p class="text-[10px] text-gray-500 mb-2">Required because the subsidiary you are applying to operates within the Roblox ecosystem.</p>
+          <input type="text" id="roblox-username" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-gray-800 outline-none">
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">2. Logistics & Background</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">How did you hear about us? *</label>
+            <select id="source" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+              <option value="" disabled selected>Select an option...</option>
+              <option value="Google">Google / Search Engine</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Socials">Social Media (X, Instagram)</option>
+              <option value="Discord">Discord / Community Server</option>
+              <option value="Our Website">Our Corporate Website</option>
+              <option value="Friends/Family">Friends / Family / Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Current School Year</label>
+            <p class="text-[10px] text-gray-500 mb-1">Please specify if you are currently studying.</p>
+            <input type="text" id="school-year" placeholder="e.g. University Year 2, High School Junior" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Legally allowed to work? *</label>
+            <p class="text-[10px] text-gray-500 mb-1">At your current age in your country.</p>
+            <select id="legal-work" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Comfortable working remote? *</label>
+            <p class="text-[10px] text-gray-500 mb-1">TNG is a remote-first organization.</p>
+            <select id="remote" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">When can you start? *</label>
+            <p class="text-[10px] text-gray-500 mb-1">If accepted.</p>
+            <input type="text" id="start-date" placeholder="e.g. Immediately, 2 weeks notice" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-1">Work Experience</label>
+          <p class="text-[10px] text-gray-500 mb-2">Please list all companies you worked for and the roles held.</p>
+          <textarea id="experience" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Reason for Leaving</label>
+            <p class="text-[10px] text-gray-500 mb-2">State the reason you left your last employment.</p>
+            <input type="text" id="reason-leaving" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Portfolio / Links</label>
+            <p class="text-[10px] text-gray-500 mb-2">Provide links to LinkedIn, Google Docs, Website, CV, etc.</p>
+            <input type="text" id="portfolio" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">3. Written Assessment</h3>
+        <p class="text-xs text-gray-500 mb-6">Please take your time answering these questions. The Executive Board heavily weighs these responses during the evaluation process.</p>
+        
+        <div class="space-y-6">
+          <div><label class="block text-gray-700 text-sm font-bold mb-2">Why do you want this role/company? *</label><textarea id="why-role" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-2">What strengths do you bring? *</label><textarea id="strengths" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-2">Biggest accomplishment / challenge overcome? *</label><textarea id="accomplishment" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-2">Give an example of teamwork, leadership, or conflict resolution. *</label><textarea id="teamwork" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-2">Why should we hire you? *</label><textarea id="why-hire" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-2">What are your career goals? *</label><textarea id="goals" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+        </div>
+
+        <div class="mt-8 border-t border-dashed pt-6">
+          <label class="block text-gray-700 text-sm font-bold mb-1">References <span class="text-gray-400 font-normal">(Optional)</span></label>
+          <p class="text-[10px] text-gray-500 mb-2">Name, relationship, and contact information for professional references.</p>
+          <textarea id="references" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-20"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <h3 class="text-lg font-bold text-[#001f3f] mb-2 border-b pb-2">4. Equal Opportunity Demographics</h3>
+        <p class="text-xs text-gray-500 mb-6 italic"><strong>Notice:</strong> The Tyler Nicholas Group is an Equal Opportunity Employer. Answering these questions is entirely optional. This information is separated from your application profile during the initial review process and <strong>will not affect hiring decisions.</strong></p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div><label class="block text-gray-700 text-sm font-bold mb-1">Gender Identity</label><input type="text" id="demo-gender" class="w-full px-4 py-2 border rounded outline-none"></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-1">Race / Ethnicity</label><input type="text" id="demo-ethnicity" class="w-full px-4 py-2 border rounded outline-none"></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-1">Disability Status</label><input type="text" id="demo-disability" class="w-full px-4 py-2 border rounded outline-none"></div>
+          <div><label class="block text-gray-700 text-sm font-bold mb-1">Veteran Status</label><input type="text" id="demo-veteran" class="w-full px-4 py-2 border rounded outline-none"></div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">5. Acknowledgement & Signature</h3>
+        
+        <div class="space-y-4 mb-8 bg-blue-50 p-6 rounded border border-blue-100">
+          <label class="flex items-start cursor-pointer">
+            <input type="checkbox" id="ack-false" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold">I acknowledge that I have not provided false information.</span>
+          </label>
+          <label class="flex items-start cursor-pointer">
+            <input type="checkbox" id="ack-guarantee" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold">I acknowledge that submitting this application does not guarantee my acceptance.</span>
+          </label>
+          <label class="flex items-start cursor-pointer">
+            <input type="checkbox" id="ack-verify" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold">I agree that the company will commit to verifying that all information provided is true.</span>
+          </label>
+          <label class="flex items-start cursor-pointer">
+            <input type="checkbox" id="ack-terms" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold">I agree to comply to the company's Terms of Use, Terms of Service, Terms & Conditions, Security Rules, Information Guidelines, Recruitment Rules, etc.</span>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+          <div>
+            <label class="block text-[#001f3f] text-sm font-bold mb-1">Electronic Signature *</label>
+            <p class="text-[10px] text-gray-500 mb-1">Type your full legal name.</p>
+            <input type="text" id="signature" class="w-full px-4 py-2 border-b-2 border-[#001f3f] bg-gray-50 outline-none font-serif italic text-lg" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Date</label>
+            <input type="text" id="sig-date" class="w-full px-4 py-2 border-none bg-transparent font-bold text-gray-500 cursor-not-allowed" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div id="error-msg" class="hidden text-red-600 font-bold text-center"></div>
+
+      <button type="submit" id="submit-btn" class="w-full bg-[#001f3f] hover:bg-blue-900 text-white font-bold py-4 rounded transition-colors shadow-lg text-lg uppercase tracking-wider">
+        Submit Official Application
+      </button>
+
+    </form>
+  </main>
+
+  <footer class="bg-[#001f3f] text-white py-8 px-6 text-center border-t border-blue-900">
+    <p class="text-xs text-gray-400">&copy; 2026 Tyler Nicholas Group. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      // 1. Auto-fill Date for Signature
+      document.getElementById('sig-date').value = new Date().toLocaleDateString('en-US');
+
+      // 2. Parse URL Parameters & Auto-Fill Job Details
+      const urlParams = new URLSearchParams(window.location.search);
+      const titleParam = urlParams.get('title') || 'General Application';
+      const companyParam = urlParams.get('company') || 'Tyler Nicholas Group';
+      const typeParam = urlParams.get('type') || 'Full-Time';
+
+      document.getElementById('app-title').value = titleParam;
+      document.getElementById('app-company').value = companyParam;
+      document.getElementById('app-type').value = typeParam;
+
+      // 3. Conditional Roblox Field Logic
+      if (companyParam.toLowerCase().includes('roblox')) {
+        const robloxWrap = document.getElementById('roblox-wrapper');
+        const robloxInput = document.getElementById('roblox-username');
+        robloxWrap.classList.remove('hidden');
+        robloxInput.required = true;
+      }
+
+      // 4. Supabase Setup & Form Submission
+      const checkSupabase = setInterval(() => {
+        if (window.supabase) {
+          clearInterval(checkSupabase); 
+          const supabase = window.supabase.createClient(
+            'https://hicowukbjsbpuebquqbh.supabase.co', 
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpY293dWtianNicHVlYnF1cWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzgyNzQsImV4cCI6MjA4NzU1NDI3NH0.sz7ZNU3-WcsskIaHC5Cjs_-WVmXLtYR15Iy8VGi8ch0'
+          );
+
+          const form = document.getElementById('application-form');
+          const errorMsg = document.getElementById('error-msg');
+          const btn = document.getElementById('submit-btn');
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            
+            // Age Verification Logic (13+)
+            const dobValue = document.getElementById('dob').value;
+            const dob = new Date(dobValue);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
+            
+            if (age < 13) {
+              errorMsg.innerText = "You must be 13 years or older to apply.";
+              errorMsg.classList.remove('hidden');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+
+            btn.innerText = "Transmitting to HR...";
+            btn.disabled = true;
+
+            // Payload Assembly matching the SQL Schema
+            const payload = {
+              full_name: document.getElementById('full-name').value,
+              preferred_name: document.getElementById('preferred-name').value,
+              email: document.getElementById('email').value,
+              discord_username: document.getElementById('discord-user').value,
+              discord_id: document.getElementById('discord-id').value,
+              country_residency: document.getElementById('country').value,
+              nationality: document.getElementById('nationality').value,
+              date_of_birth: document.getElementById('dob').value,
+              roblox_username: document.getElementById('roblox-username').value,
+              
+              job_title: document.getElementById('app-title').value,
+              company: document.getElementById('app-company').value,
+              employment_type: document.getElementById('app-type').value,
+              source: document.getElementById('source').value,
+              
+              current_school_year: document.getElementById('school-year').value,
+              legal_to_work: document.getElementById('legal-work').value === 'true',
+              start_date: document.getElementById('start-date').value,
+              remote_comfortable: document.getElementById('remote').value === 'true',
+              work_experience: document.getElementById('experience').value,
+              reason_for_leaving: document.getElementById('reason-leaving').value,
+              portfolio_links: document.getElementById('portfolio').value,
+              
+              why_this_role: document.getElementById('why-role').value,
+              strengths: document.getElementById('strengths').value,
+              biggest_accomplishment: document.getElementById('accomplishment').value,
+              teamwork_example: document.getElementById('teamwork').value,
+              why_hire_you: document.getElementById('why-hire').value,
+              career_goals: document.getElementById('goals').value,
+              
+              references_info: document.getElementById('references').value,
+              
+              ack_no_false_info: document.getElementById('ack-false').checked,
+              ack_no_guarantee: document.getElementById('ack-guarantee').checked,
+              ack_verify_info: document.getElementById('ack-verify').checked,
+              ack_terms_compliance: document.getElementById('ack-terms').checked,
+              
+              gender: document.getElementById('demo-gender').value,
+              ethnicity: document.getElementById('demo-ethnicity').value,
+              disability_status: document.getElementById('demo-disability').value,
+              veteran_status: document.getElementById('demo-veteran').value,
+              
+              electronic_signature: document.getElementById('signature').value
+            };
+
+            const { error } = await supabase.from('job_applications').insert([payload]);
+
+            if (error) {
+              console.error(error);
+              errorMsg.innerText = "A database connection error occurred. Please try again.";
+              errorMsg.classList.remove('hidden');
+              btn.innerText = "Submit Official Application";
+              btn.disabled = false;
+            } else {
+              form.classList.add('hidden');
+              document.getElementById('form-success').classList.remove('hidden');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          });
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>
