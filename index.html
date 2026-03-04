@@ -6,22 +6,40 @@
   <title>Careers Portal | Tyler Nicholas Group</title>
   <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
   
-  <style> body { opacity: 0; visibility: hidden; } </style>
-  <script> window.addEventListener('load', function() { document.body.style.transition = 'opacity 0.2s ease-in'; document.body.style.opacity = '1'; document.body.style.visibility = 'visible'; }); </script>
-
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+
+  <style>
+    /* Super Amazing Loading Animation Styles */
+    #tng-loader { transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out; }
+    .loader-ring-1 { animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
+    .loader-ring-2 { animation: spin 2s linear infinite reverse; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .pulse-text { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen">
+
+  <div id="tng-loader" class="fixed inset-0 z-[9999] bg-[#001f3f] flex flex-col items-center justify-center">
+    <div class="relative w-32 h-32 mb-8">
+      <div class="absolute inset-0 border-t-4 border-b-4 border-[#a6192e] rounded-full loader-ring-1 opacity-80"></div>
+      <div class="absolute inset-3 border-l-4 border-r-4 border-white rounded-full loader-ring-2 opacity-60"></div>
+      <div class="absolute inset-0 flex items-center justify-center text-white text-4xl">
+        <i class="fa-solid fa-earth-americas pulse-text"></i>
+      </div>
+    </div>
+    <h2 class="text-white text-2xl font-bold tracking-[0.3em] uppercase pulse-text">TNG Careers</h2>
+    <p class="text-[#a6192e] text-xs font-bold tracking-widest mt-3 uppercase">Syncing Global Network...</p>
+  </div>
 
   <div id="announcement-bar" class="hidden bg-[#a6192e] text-white text-center py-2 text-sm md:text-base px-4 transition-all duration-300"></div>
 
   <nav class="bg-[#001f3f] text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-md relative z-50">
     <div class="font-bold text-xl tracking-wider uppercase">TNG Careers</div>
     <div class="hidden md:flex space-x-6 text-sm items-center font-bold">
-      <a href="about.html" class="hover:text-gray-300 transition-colors">Our Hiring Initiative</a>
+      <a href="./about/" class="hover:text-gray-300 transition-colors">Our Hiring Initiative</a>
       <a href="https://tylernicholasgroup.com" class="hover:text-gray-300 transition-colors bg-white/10 px-4 py-2 rounded">Main Corporate Site <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i></a>
     </div>
   </nav>
@@ -110,8 +128,20 @@
             combinedJobs.sort((a, b) => b.date - a.date);
             renderJobs();
 
+            // REMOVE LOADER ANIMATION AFTER FETCHING IS COMPLETE
+            setTimeout(() => {
+              const loader = document.getElementById('tng-loader');
+              loader.style.opacity = '0';
+              setTimeout(() => { loader.style.visibility = 'hidden'; loader.style.display = 'none'; }, 800);
+            }, 500); // Artificial 500ms delay just so the cool animation is visible for a moment
+
           } catch (err) {
             document.getElementById('jobs-container').innerHTML = `<div class="col-span-full text-center py-12 text-red-500 font-bold">Failed to load open positions.</div>`;
+            
+            // Still remove loader even on error
+            const loader = document.getElementById('tng-loader');
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.visibility = 'hidden'; loader.style.display = 'none'; }, 800);
           }
         }
       }, 100);
