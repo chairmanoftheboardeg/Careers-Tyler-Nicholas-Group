@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Application Center | Tyler Nicholas Group</title>
+  <title>Application Center | TNG Careers</title>
   <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
   
   <style> body { opacity: 0; visibility: hidden; } </style>
@@ -11,75 +11,81 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="../../style.css">
+  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
 <body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen">
 
+  <div id="announcement-bar" class="hidden bg-[#a6192e] text-white text-center py-2 text-sm md:text-base px-4 transition-all duration-300"></div>
+
   <nav class="bg-[#001f3f] text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-md relative z-50">
-    <div class="font-bold text-xl tracking-wider uppercase">TNG Careers Portal</div>
+    <div class="font-bold text-xl tracking-wider uppercase">TNG Careers</div>
     <div class="hidden md:flex space-x-6 text-sm items-center font-bold">
       <a href="../" class="hover:text-gray-300 transition-colors"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Jobs</a>
     </div>
   </nav>
 
-  <div class="bg-[#001f3f] text-white py-12 px-6 md:px-12 text-center border-b-4 border-[#a6192e]">
-    <h1 class="text-3xl md:text-5xl font-bold mb-3">Candidate Application</h1>
-    <p class="text-gray-300 max-w-2xl mx-auto md:text-lg">Please complete all required fields accurately. Your application will be reviewed by the TNG Human Resources Executive Board.</p>
+  <div class="bg-[#001f3f] text-white py-12 px-6 md:px-12 text-center border-b-4 border-[#a6192e] relative overflow-hidden">
+    <i class="fa-solid fa-file-signature absolute -right-10 -bottom-10 text-[10rem] text-white opacity-5 pointer-events-none"></i>
+    <div class="relative z-10">
+      <h1 class="text-3xl md:text-5xl font-bold mb-3 uppercase tracking-tight">Candidate Application</h1>
+      <p class="text-gray-300 max-w-2xl mx-auto md:text-lg">Complete all fields accurately. Your submission will be securely transmitted to our HR Command Center for review.</p>
+    </div>
   </div>
 
   <main class="flex-grow max-w-4xl mx-auto py-12 px-6 w-full">
     
-    <div id="form-success" class="hidden bg-green-100 border-l-4 border-green-500 text-green-700 p-6 rounded shadow-md mb-8">
-      <h3 class="font-bold text-lg mb-1"><i class="fa-solid fa-circle-check mr-2"></i> Application Submitted Successfully</h3>
-      <p>Thank you for applying to the Tyler Nicholas Group. Our HR department has securely received your profile and will be in touch regarding the next steps.</p>
-      <a href="../" class="inline-block mt-4 bg-green-700 text-white font-bold py-2 px-6 rounded text-sm hover:bg-green-800">Return to Job Listings</a>
+    <div id="form-success" class="hidden bg-green-50 border-l-4 border-green-500 text-green-800 p-8 rounded shadow-lg mb-8 text-center">
+      <i class="fa-solid fa-circle-check text-5xl text-green-500 mb-4"></i>
+      <h3 class="font-bold text-2xl mb-2">Application Transmitted Successfully</h3>
+      <p class="mb-6">Thank you for your interest in the Tyler Nicholas Group. Our Executive Human Resources team has securely received your profile. We will contact you via Discord or Email regarding the next steps.</p>
+      <a href="../" class="inline-block bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-8 rounded shadow transition-colors">Return to Job Listings</a>
     </div>
 
     <form id="application-form" class="space-y-10 bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-gray-200">
       
-      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b pb-2 uppercase tracking-widest text-xs">Target Position</h3>
+      <div class="bg-gray-100 p-6 rounded-xl border border-gray-200">
+        <h3 class="text-sm font-bold text-[#001f3f] mb-4 border-b border-gray-300 pb-2 uppercase tracking-widest">Target Position (Locked)</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label class="block text-gray-700 text-xs font-bold mb-1">Company / Subsidiary</label>
-            <input type="text" id="app-company" class="w-full px-4 py-2 bg-gray-200 border rounded text-gray-600 font-bold cursor-not-allowed" readonly required>
+            <label class="block text-gray-500 text-xs font-bold mb-1">Company / Subsidiary</label>
+            <input type="text" id="app-company" class="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded text-gray-700 font-bold cursor-not-allowed" readonly required>
           </div>
           <div>
-            <label class="block text-gray-700 text-xs font-bold mb-1">Job Title</label>
-            <input type="text" id="app-title" class="w-full px-4 py-2 bg-gray-200 border rounded text-gray-600 font-bold cursor-not-allowed" readonly required>
+            <label class="block text-gray-500 text-xs font-bold mb-1">Job Title</label>
+            <input type="text" id="app-title" class="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded text-gray-700 font-bold cursor-not-allowed" readonly required>
           </div>
           <div>
-            <label class="block text-gray-700 text-xs font-bold mb-1">Employment Type</label>
-            <input type="text" id="app-type" class="w-full px-4 py-2 bg-gray-200 border rounded text-gray-600 font-bold cursor-not-allowed" readonly required>
+            <label class="block text-gray-500 text-xs font-bold mb-1">Employment Type</label>
+            <input type="text" id="app-type" class="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded text-gray-700 font-bold cursor-not-allowed" readonly required>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">1. Personal Information</h3>
+        <h3 class="text-xl font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">1. Personal Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Full Name *</label>
             <p class="text-[10px] text-gray-500 mb-1">First Name, Last Name, and Middle Initial Only.</p>
-            <input type="text" id="full-name" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <input type="text" id="full-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
           </div>
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Preferred Name</label>
-            <p class="text-[10px] text-gray-500 mb-1">If you prefer we use a different name to address you.</p>
-            <input type="text" id="preferred-name" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+            <p class="text-[10px] text-gray-500 mb-1">If you prefer a different name for daily operations.</p>
+            <input type="text" id="preferred-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
           </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Email Address *</label>
-            <input type="email" id="email" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
           </div>
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Date of Birth *</label>
-            <p class="text-[10px] text-gray-500 mb-1">You must be 13+ to be employed by TNG or its subsidiaries.</p>
-            <input type="date" id="dob" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <p class="text-[10px] text-gray-500 mb-1">You must be 13+ to be employed by TNG.</p>
+            <input type="date" id="dob" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
           </div>
         </div>
 
@@ -87,55 +93,56 @@
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Country of Residency *</label>
             <p class="text-[10px] text-gray-500 mb-1">Do not type full address. Only the country.</p>
-            <input type="text" id="country" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <input type="text" id="country" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
           </div>
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Nationality</label>
-            <p class="text-[10px] text-gray-500 mb-1">Keep empty if same as country of residency.</p>
-            <input type="text" id="nationality" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+            <p class="text-[10px] text-gray-500 mb-1">Leave empty if same as country of residency.</p>
+            <input type="text" id="nationality" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-blue-50 p-4 rounded border border-blue-100">
-            <label class="block text-[#001f3f] text-sm font-bold mb-1"><i class="fa-brands fa-discord mr-1"></i> Discord Username *</label>
-            <p class="text-[10px] text-gray-600 mb-2">A Discord account is strictly required to participate.</p>
-            <input type="text" id="discord-user" placeholder="e.g. tyler_n" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <label class="block text-[#001f3f] text-sm font-bold mb-1"><i class="fa-brands fa-discord mr-1 text-[#5865F2]"></i> Discord Username *</label>
+            <p class="text-[10px] text-gray-600 mb-2">Required for internal corporate communication.</p>
+            <input type="text" id="discord-user" placeholder="e.g. tyler_n" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#5865F2] outline-none" required>
           </div>
           <div class="bg-blue-50 p-4 rounded border border-blue-100">
-            <label class="block text-[#001f3f] text-sm font-bold mb-1"><i class="fa-brands fa-discord mr-1"></i> Discord ID *</label>
-            <p class="text-[10px] text-gray-600 mb-2">Enable developer mode in settings to copy your ID.</p>
-            <input type="text" id="discord-id" placeholder="e.g. 123456789012345678" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <label class="block text-[#001f3f] text-sm font-bold mb-1"><i class="fa-brands fa-discord mr-1 text-[#5865F2]"></i> Discord ID *</label>
+            <p class="text-[10px] text-gray-600 mb-2">Enable developer mode to copy your 18-digit ID.</p>
+            <input type="text" id="discord-id" placeholder="e.g. 123456789012345678" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#5865F2] outline-none" required>
           </div>
         </div>
 
-        <div id="roblox-wrapper" class="hidden mt-6 bg-gray-100 p-4 rounded border border-gray-300">
-          <label class="block text-gray-800 text-sm font-bold mb-1">Roblox Username *</label>
-          <p class="text-[10px] text-gray-500 mb-2">Required because the subsidiary you are applying to operates within the Roblox ecosystem.</p>
-          <input type="text" id="roblox-username" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-gray-800 outline-none">
+        <div id="roblox-wrapper" class="hidden mt-6 bg-gray-900 p-6 rounded-xl border border-gray-700 text-white">
+          <label class="block text-white text-sm font-bold mb-1"><i class="fa-solid fa-cube mr-2"></i> Roblox Username *</label>
+          <p class="text-xs text-gray-400 mb-3">Because this subsidiary operates within the Roblox ecosystem, we require your account name.</p>
+          <input type="text" id="roblox-username" placeholder="Enter Roblox Username..." class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded text-white focus:ring-2 focus:ring-white outline-none">
         </div>
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">2. Logistics & Background</h3>
+        <h3 class="text-xl font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">2. Logistics & Background</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">How did you hear about us? *</label>
-            <select id="source" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <select id="source" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
               <option value="" disabled selected>Select an option...</option>
               <option value="Google">Google / Search Engine</option>
               <option value="LinkedIn">LinkedIn</option>
               <option value="Socials">Social Media (X, Instagram)</option>
               <option value="Discord">Discord / Community Server</option>
               <option value="Our Website">Our Corporate Website</option>
+              <option value="Announcement">Company Announcement</option>
               <option value="Friends/Family">Friends / Family / Other</option>
             </select>
           </div>
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Current School Year</label>
-            <p class="text-[10px] text-gray-500 mb-1">Please specify if you are currently studying.</p>
-            <input type="text" id="school-year" placeholder="e.g. University Year 2, High School Junior" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+            <p class="text-[10px] text-gray-500 mb-1">Only if currently enrolled in education.</p>
+            <input type="text" id="school-year" placeholder="e.g. University Year 2, High School Junior" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
           </div>
         </div>
 
@@ -143,15 +150,15 @@
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Legally allowed to work? *</label>
             <p class="text-[10px] text-gray-500 mb-1">At your current age in your country.</p>
-            <select id="legal-work" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <select id="legal-work" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
           </div>
           <div>
-            <label class="block text-gray-700 text-sm font-bold mb-1">Comfortable working remote? *</label>
-            <p class="text-[10px] text-gray-500 mb-1">TNG is a remote-first organization.</p>
-            <select id="remote" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <label class="block text-gray-700 text-sm font-bold mb-1">Remote comfortable? *</label>
+            <p class="text-[10px] text-gray-500 mb-1">TNG operates globally.</p>
+            <select id="remote" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
@@ -159,53 +166,53 @@
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">When can you start? *</label>
             <p class="text-[10px] text-gray-500 mb-1">If accepted.</p>
-            <input type="text" id="start-date" placeholder="e.g. Immediately, 2 weeks notice" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
+            <input type="text" id="start-date" placeholder="e.g. Immediately" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none" required>
           </div>
         </div>
 
         <div class="mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-1">Work Experience</label>
-          <p class="text-[10px] text-gray-500 mb-2">Please list all companies you worked for and the roles held.</p>
-          <textarea id="experience" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24"></textarea>
+          <p class="text-[10px] text-gray-500 mb-2">Please list all relevant companies you worked for and your roles.</p>
+          <textarea id="experience" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24"></textarea>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Reason for Leaving</label>
-            <p class="text-[10px] text-gray-500 mb-2">State the reason you left your last employment.</p>
-            <input type="text" id="reason-leaving" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+            <p class="text-[10px] text-gray-500 mb-2">Why did you leave your last employment?</p>
+            <input type="text" id="reason-leaving" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
           </div>
           <div>
-            <label class="block text-gray-700 text-sm font-bold mb-1">Portfolio / Links</label>
-            <p class="text-[10px] text-gray-500 mb-2">Provide links to LinkedIn, Google Docs, Website, CV, etc.</p>
-            <input type="text" id="portfolio" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
+            <label class="block text-gray-700 text-sm font-bold mb-1">Portfolio / CV Links</label>
+            <p class="text-[10px] text-gray-500 mb-2">Provide links to LinkedIn, Google Docs, personal website, etc.</p>
+            <input type="text" id="portfolio" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none">
           </div>
         </div>
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">3. Written Assessment</h3>
-        <p class="text-xs text-gray-500 mb-6">Please take your time answering these questions. The Executive Board heavily weighs these responses during the evaluation process.</p>
+        <h3 class="text-xl font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">3. Written Assessment</h3>
+        <p class="text-sm text-gray-500 mb-6 bg-gray-50 p-4 rounded border-l-4 border-gray-300">Please take your time answering these questions. The Executive Board heavily weighs these responses during the evaluation process to gauge your critical thinking and alignment with our corporate culture.</p>
         
         <div class="space-y-6">
-          <div><label class="block text-gray-700 text-sm font-bold mb-2">Why do you want this role/company? *</label><textarea id="why-role" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
-          <div><label class="block text-gray-700 text-sm font-bold mb-2">What strengths do you bring? *</label><textarea id="strengths" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
-          <div><label class="block text-gray-700 text-sm font-bold mb-2">Biggest accomplishment / challenge overcome? *</label><textarea id="accomplishment" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
-          <div><label class="block text-gray-700 text-sm font-bold mb-2">Give an example of teamwork, leadership, or conflict resolution. *</label><textarea id="teamwork" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
-          <div><label class="block text-gray-700 text-sm font-bold mb-2">Why should we hire you? *</label><textarea id="why-hire" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
-          <div><label class="block text-gray-700 text-sm font-bold mb-2">What are your career goals? *</label><textarea id="goals" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-[#001f3f] text-sm font-bold mb-2">Why do you want this role/company? *</label><textarea id="why-role" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-[#001f3f] text-sm font-bold mb-2">What strengths do you bring? *</label><textarea id="strengths" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-[#001f3f] text-sm font-bold mb-2">Biggest accomplishment or challenge overcome? *</label><textarea id="accomplishment" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-[#001f3f] text-sm font-bold mb-2">Example of teamwork, leadership, or conflict resolution. *</label><textarea id="teamwork" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-[#001f3f] text-sm font-bold mb-2">Why should we hire you? *</label><textarea id="why-hire" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
+          <div><label class="block text-[#001f3f] text-sm font-bold mb-2">What are your career goals? *</label><textarea id="goals" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-24" required></textarea></div>
         </div>
 
-        <div class="mt-8 border-t border-dashed pt-6">
+        <div class="mt-8">
           <label class="block text-gray-700 text-sm font-bold mb-1">References <span class="text-gray-400 font-normal">(Optional)</span></label>
           <p class="text-[10px] text-gray-500 mb-2">Name, relationship, and contact information for professional references.</p>
-          <textarea id="references" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-20"></textarea>
+          <textarea id="references" class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#001f3f] outline-none h-20"></textarea>
         </div>
       </div>
 
       <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        <h3 class="text-lg font-bold text-[#001f3f] mb-2 border-b pb-2">4. Equal Opportunity Demographics</h3>
-        <p class="text-xs text-gray-500 mb-6 italic"><strong>Notice:</strong> The Tyler Nicholas Group is an Equal Opportunity Employer. Answering these questions is entirely optional. This information is separated from your application profile during the initial review process and <strong>will not affect hiring decisions.</strong></p>
+        <h3 class="text-xl font-bold text-[#001f3f] mb-2 border-b border-gray-300 pb-2">4. Equal Opportunity Demographics</h3>
+        <p class="text-xs text-gray-500 mb-6 italic"><strong>Notice:</strong> The Tyler Nicholas Group is a strict meritocracy. Answering these questions is completely optional. This data is physically separated from your core application during initial review and <strong>will not affect hiring decisions</strong>.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div><label class="block text-gray-700 text-sm font-bold mb-1">Gender Identity</label><input type="text" id="demo-gender" class="w-full px-4 py-2 border rounded outline-none"></div>
@@ -216,60 +223,60 @@
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">5. Acknowledgement & Signature</h3>
+        <h3 class="text-xl font-bold text-[#001f3f] mb-4 border-b border-[#a6192e] pb-2">5. Acknowledgement & Signature</h3>
         
-        <div class="space-y-4 mb-8 bg-blue-50 p-6 rounded border border-blue-100">
-          <label class="flex items-start cursor-pointer">
-            <input type="checkbox" id="ack-false" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
-            <span class="text-sm text-gray-800 font-semibold">I acknowledge that I have not provided false information.</span>
+        <div class="space-y-4 mb-8 bg-blue-50/50 p-6 rounded-lg border border-blue-100">
+          <label class="flex items-start cursor-pointer group">
+            <input type="checkbox" id="ack-false" class="mt-1 mr-3 w-5 h-5 text-[#a6192e] rounded border-gray-300 focus:ring-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold group-hover:text-[#a6192e] transition-colors">I acknowledge that I have not provided false information.</span>
           </label>
-          <label class="flex items-start cursor-pointer">
-            <input type="checkbox" id="ack-guarantee" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
-            <span class="text-sm text-gray-800 font-semibold">I acknowledge that submitting this application does not guarantee my acceptance.</span>
+          <label class="flex items-start cursor-pointer group">
+            <input type="checkbox" id="ack-guarantee" class="mt-1 mr-3 w-5 h-5 text-[#a6192e] rounded border-gray-300 focus:ring-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold group-hover:text-[#a6192e] transition-colors">I acknowledge that submitting this application does not guarantee my acceptance.</span>
           </label>
-          <label class="flex items-start cursor-pointer">
-            <input type="checkbox" id="ack-verify" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
-            <span class="text-sm text-gray-800 font-semibold">I agree that the company will commit to verifying that all information provided is true.</span>
+          <label class="flex items-start cursor-pointer group">
+            <input type="checkbox" id="ack-verify" class="mt-1 mr-3 w-5 h-5 text-[#a6192e] rounded border-gray-300 focus:ring-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold group-hover:text-[#a6192e] transition-colors">I agree that the company will commit to verifying that all information provided is true.</span>
           </label>
-          <label class="flex items-start cursor-pointer">
-            <input type="checkbox" id="ack-terms" class="mt-1 mr-3 w-4 h-4 text-[#a6192e]" required>
-            <span class="text-sm text-gray-800 font-semibold">I agree to comply to the company's Terms of Use, Terms of Service, Terms & Conditions, Security Rules, Information Guidelines, Recruitment Rules, etc.</span>
+          <label class="flex items-start cursor-pointer group">
+            <input type="checkbox" id="ack-terms" class="mt-1 mr-3 w-5 h-5 text-[#a6192e] rounded border-gray-300 focus:ring-[#a6192e]" required>
+            <span class="text-sm text-gray-800 font-semibold group-hover:text-[#a6192e] transition-colors">I agree to comply to the company's Terms of Use, Terms of Service, Terms & Conditions, Security Rules, Information Guidelines, Recruitment Rules, etc.</span>
           </label>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end bg-gray-50 p-6 rounded-lg border border-gray-200">
           <div>
             <label class="block text-[#001f3f] text-sm font-bold mb-1">Electronic Signature *</label>
-            <p class="text-[10px] text-gray-500 mb-1">Type your full legal name.</p>
-            <input type="text" id="signature" class="w-full px-4 py-2 border-b-2 border-[#001f3f] bg-gray-50 outline-none font-serif italic text-lg" required>
+            <p class="text-[10px] text-gray-500 mb-2">By typing your full legal name, you sign this document.</p>
+            <input type="text" id="signature" placeholder="Type your full name..." class="w-full px-4 py-3 border-b-2 border-[#001f3f] bg-transparent outline-none font-serif italic text-xl focus:border-[#a6192e] transition-colors" required>
           </div>
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1">Date</label>
-            <input type="text" id="sig-date" class="w-full px-4 py-2 border-none bg-transparent font-bold text-gray-500 cursor-not-allowed" readonly>
+            <input type="text" id="sig-date" class="w-full px-4 py-3 border-none bg-transparent font-bold text-gray-500 text-lg cursor-not-allowed" readonly>
           </div>
         </div>
       </div>
 
-      <div id="error-msg" class="hidden text-red-600 font-bold text-center"></div>
+      <div id="error-msg" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded font-bold text-center"></div>
 
-      <button type="submit" id="submit-btn" class="w-full bg-[#001f3f] hover:bg-blue-900 text-white font-bold py-4 rounded transition-colors shadow-lg text-lg uppercase tracking-wider">
-        Submit Official Application
+      <button type="submit" id="submit-btn" class="w-full bg-[#001f3f] hover:bg-blue-900 text-white font-bold py-5 rounded-lg transition-colors shadow-xl text-lg uppercase tracking-widest border border-blue-800">
+        Transmit Official Application <i class="fa-solid fa-paper-plane ml-2"></i>
       </button>
 
     </form>
   </main>
 
   <footer class="bg-[#001f3f] text-white py-8 px-6 text-center border-t border-blue-900">
-    <p class="text-xs text-gray-400">&copy; 2026 Tyler Nicholas Group. All rights reserved.</p>
+    <p class="text-sm text-gray-400">&copy; 2026 Tyler Nicholas Group LLC. All rights reserved.</p>
   </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       
-      // 1. Auto-fill Date for Signature
-      document.getElementById('sig-date').value = new Date().toLocaleDateString('en-US');
+      // 1. Auto-fill Date
+      document.getElementById('sig-date').value = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-      // 2. Parse URL Parameters & Auto-Fill Job Details
+      // 2. Parse URL Params to lock in Job Details
       const urlParams = new URLSearchParams(window.location.search);
       const titleParam = urlParams.get('title') || 'General Application';
       const companyParam = urlParams.get('company') || 'Tyler Nicholas Group';
@@ -279,7 +286,8 @@
       document.getElementById('app-company').value = companyParam;
       document.getElementById('app-type').value = typeParam;
 
-      // 3. Conditional Roblox Field Logic
+      // 3. Conditional Roblox Logic
+      // If the company name includes "roblox", show the field and make it required
       if (companyParam.toLowerCase().includes('roblox')) {
         const robloxWrap = document.getElementById('roblox-wrapper');
         const robloxInput = document.getElementById('roblox-username');
@@ -287,7 +295,7 @@
         robloxInput.required = true;
       }
 
-      // 4. Supabase Setup & Form Submission
+      // 4. Form Submission & Supabase Transmission
       const checkSupabase = setInterval(() => {
         if (window.supabase) {
           clearInterval(checkSupabase); 
@@ -304,7 +312,7 @@
             e.preventDefault();
             errorMsg.classList.add('hidden');
             
-            // Age Verification Logic (13+)
+            // Age Verification (Must be 13+)
             const dobValue = document.getElementById('dob').value;
             const dob = new Date(dobValue);
             const today = new Date();
@@ -313,39 +321,40 @@
             if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
             
             if (age < 13) {
-              errorMsg.innerText = "You must be 13 years or older to apply.";
+              errorMsg.innerText = "Compliance Error: You must be 13 years or older to apply.";
               errorMsg.classList.remove('hidden');
               window.scrollTo({ top: 0, behavior: 'smooth' });
               return;
             }
 
-            btn.innerText = "Transmitting to HR...";
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Transmitting...`;
             btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
 
-            // Payload Assembly matching the SQL Schema
+            // Build payload exactly matching the SQL table
             const payload = {
               full_name: document.getElementById('full-name').value,
-              preferred_name: document.getElementById('preferred-name').value,
+              preferred_name: document.getElementById('preferred-name').value || null,
               email: document.getElementById('email').value,
               discord_username: document.getElementById('discord-user').value,
               discord_id: document.getElementById('discord-id').value,
               country_residency: document.getElementById('country').value,
-              nationality: document.getElementById('nationality').value,
+              nationality: document.getElementById('nationality').value || null,
               date_of_birth: document.getElementById('dob').value,
-              roblox_username: document.getElementById('roblox-username').value,
+              roblox_username: document.getElementById('roblox-username').value || null,
               
               job_title: document.getElementById('app-title').value,
               company: document.getElementById('app-company').value,
               employment_type: document.getElementById('app-type').value,
               source: document.getElementById('source').value,
               
-              current_school_year: document.getElementById('school-year').value,
+              current_school_year: document.getElementById('school-year').value || null,
               legal_to_work: document.getElementById('legal-work').value === 'true',
               start_date: document.getElementById('start-date').value,
               remote_comfortable: document.getElementById('remote').value === 'true',
-              work_experience: document.getElementById('experience').value,
-              reason_for_leaving: document.getElementById('reason-leaving').value,
-              portfolio_links: document.getElementById('portfolio').value,
+              work_experience: document.getElementById('experience').value || null,
+              reason_for_leaving: document.getElementById('reason-leaving').value || null,
+              portfolio_links: document.getElementById('portfolio').value || null,
               
               why_this_role: document.getElementById('why-role').value,
               strengths: document.getElementById('strengths').value,
@@ -354,17 +363,17 @@
               why_hire_you: document.getElementById('why-hire').value,
               career_goals: document.getElementById('goals').value,
               
-              references_info: document.getElementById('references').value,
+              references_info: document.getElementById('references').value || null,
               
               ack_no_false_info: document.getElementById('ack-false').checked,
               ack_no_guarantee: document.getElementById('ack-guarantee').checked,
               ack_verify_info: document.getElementById('ack-verify').checked,
               ack_terms_compliance: document.getElementById('ack-terms').checked,
               
-              gender: document.getElementById('demo-gender').value,
-              ethnicity: document.getElementById('demo-ethnicity').value,
-              disability_status: document.getElementById('demo-disability').value,
-              veteran_status: document.getElementById('demo-veteran').value,
+              gender: document.getElementById('demo-gender').value || null,
+              ethnicity: document.getElementById('demo-ethnicity').value || null,
+              disability_status: document.getElementById('demo-disability').value || null,
+              veteran_status: document.getElementById('demo-veteran').value || null,
               
               electronic_signature: document.getElementById('signature').value
             };
@@ -373,10 +382,11 @@
 
             if (error) {
               console.error(error);
-              errorMsg.innerText = "A database connection error occurred. Please try again.";
+              errorMsg.innerText = "Database connection error. Please try again or contact HR support.";
               errorMsg.classList.remove('hidden');
-              btn.innerText = "Submit Official Application";
+              btn.innerHTML = `Transmit Official Application <i class="fa-solid fa-paper-plane ml-2"></i>`;
               btn.disabled = false;
+              btn.classList.remove('opacity-75', 'cursor-not-allowed');
             } else {
               form.classList.add('hidden');
               document.getElementById('form-success').classList.remove('hidden');
