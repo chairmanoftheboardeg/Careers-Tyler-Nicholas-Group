@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 
   <style>
     /* Super Amazing Loading Animation Styles */
@@ -112,17 +112,36 @@
 
           // Fetch Jobs
           try {
+            // 1. Fetch from TNG DB
             const { data: tngData } = await tngDb.from('job_postings').select('*').eq('is_active', true);
             if (tngData) {
-              tngData.forEach(job => combinedJobs.push({ source: 'TNG', title: job.title, company: job.company, location: job.location || 'Remote', type: job.employment_type || 'Full-Time', description: job.description, external_link: job.external_link, date: new Date(job.created_at) }));
+              tngData.forEach(job => {
+                combinedJobs.push({ 
+                  source: 'TNG', 
+                  title: job.title, 
+                  company: job.company, 
+                  location: job.location || 'Remote', 
+                  type: job.employment_type || 'Full-Time', 
+                  description: job.description, 
+                  external_link: job.external_link, 
+                  date: new Date(job.created_at) 
+                });
+              });
             }
 
-            const { data: egrData } = await egrDb.from('jobs').select('*');
+            // 2. Fetch from updated EGR DB
+            const { data: egrData } = await egrDb.from('egr_jobs').select('*').eq('is_active', true);
             if (egrData) {
               egrData.forEach(job => {
-                if(job.status !== 'Closed') {
-                  combinedJobs.push({ source: 'EGR', title: job.title, company: 'Emirates Group Roblox', location: 'Remote / Virtual', type: job.volunteer_basis ? 'Volunteer / Unpaid' : 'Staff', description: job.summary || job.description || 'Join the premier virtual aviation community.', slug: job.slug, date: new Date(job.published_at || Date.now()) });
-                }
+                combinedJobs.push({ 
+                  source: 'EGR', 
+                  title: job.title, 
+                  company: 'Emirates Group Roblox', 
+                  location: 'Remote / Virtual', 
+                  type: job.department || 'Operations', 
+                  description: job.description || 'Join the premier virtual aviation community.', 
+                  date: new Date(job.created_at) 
+                });
               });
             }
 
@@ -134,7 +153,7 @@
               const loader = document.getElementById('tng-loader');
               loader.style.opacity = '0';
               setTimeout(() => { loader.style.visibility = 'hidden'; loader.style.display = 'none'; }, 800);
-            }, 500); // Artificial 500ms delay just so the cool animation is visible for a moment
+            }, 500); 
 
           } catch (err) {
             document.getElementById('jobs-container').innerHTML = `<div class="col-span-full text-center py-12 text-red-500 font-bold">Failed to load open positions.</div>`;
@@ -176,6 +195,7 @@
           let btnClass = 'bg-[#001f3f] hover:bg-blue-900 text-white';
 
           if (job.source === 'EGR') {
+            // Hard redirects directly to your EGR careers subdomain
             applyUrl = `https://careers.emiratesgrouproblox.link/`;
             btnText = 'Apply on EGR Portal <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>';
             btnClass = 'bg-[#a6192e] hover:bg-red-800 text-white';
