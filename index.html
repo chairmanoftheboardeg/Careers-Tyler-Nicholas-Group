@@ -149,7 +149,6 @@
             </div>
 
             <div class="md:w-2/3 space-y-16" data-aos="fade-left">
-                
                 <div class="border-l-2 border-white/20 pl-8 md:pl-12">
                     <h4 class="text-3xl font-bold mb-4 tracking-tight text-white">Absolute Equality</h4>
                     <p class="text-xl text-gray-300 font-light leading-relaxed">
@@ -170,7 +169,6 @@
                         A high-performance culture is only sustainable if it is built on respect. We expect our staff to uphold the highest standards of human rights and dignity. Integrity is a non-negotiable foundation of our enterprise, and it dictates how we interact with colleagues, partners, and the global community.
                     </p>
                 </div>
-
             </div>
 
         </div>
@@ -240,6 +238,11 @@
           <div class="flex-grow overflow-y-auto px-8 py-8 custom-scroll">
               <form id="application-form" class="space-y-10">
                   
+                  <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                      <label class="block text-xs font-bold text-blue-800 uppercase tracking-widest mb-1">Target Role (Auto-Filled)</label>
+                      <input type="text" id="app-role-visible" readonly class="w-full bg-transparent border-none text-tng-navy text-xl font-bold p-0 outline-none cursor-not-allowed">
+                  </div>
+
                   <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                       <h3 class="text-lg font-bold text-tng-navy mb-4 border-b border-gray-100 pb-2">1. Personal Identification</h3>
                       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -417,7 +420,10 @@
             return;
         }
         activeJobTitle = jobTitle;
+        
+        // Auto-populate UI elements
         document.getElementById('modal-job-title').innerText = jobTitle;
+        document.getElementById('app-role-visible').value = jobTitle; // The new locked input field
         document.getElementById('modal-company-name').innerHTML = `<i class="fa-solid fa-building mr-1"></i> ${companyName}`;
         
         document.body.classList.add('modal-open');
@@ -466,7 +472,9 @@
             const gridContainer = document.getElementById('jobs-grid');
             
             if (jobsError) {
-                document.getElementById('jobs-status').innerText = `Error connecting to recruitment server.`;
+                // If it fails, print the exact error to the screen so we can debug it
+                document.getElementById('jobs-status').innerHTML = `<span class="text-red-500 font-bold">Database Error:</span> ${jobsError.message || jobsError.details || JSON.stringify(jobsError)}`;
+                console.error("Supabase Fetch Error:", jobsError);
             } else if (!jobs || jobs.length === 0) {
               document.getElementById('jobs-status').innerText = 'No open positions available at this time. Please check back later.';
             } else {
@@ -487,7 +495,10 @@
                 `;
               }).join('');
             }
-          } catch (err) {}
+          } catch (err) {
+              document.getElementById('jobs-status').innerHTML = `<span class="text-red-500 font-bold">System Error:</span> ${err.message}`;
+              console.error(err);
+          }
 
           // 2. SUBMIT APPLICATION LOGIC (Connects to backend RPC)
           const appForm = document.getElementById('application-form');
@@ -553,7 +564,7 @@
                       
                   } catch (err) {
                       console.error(err);
-                      errorMsg.innerText = "System transmission failed. Check connection and try again.";
+                      errorMsg.innerText = "System transmission failed: " + (err.message || "Unknown error");
                       errorMsg.classList.remove('hidden');
                       btn.disabled = false;
                       btn.innerHTML = 'Submit Official Application';
