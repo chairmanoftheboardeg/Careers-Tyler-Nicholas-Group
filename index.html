@@ -156,7 +156,7 @@
             
             <div class="mb-10" data-aos="fade-up">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-tng-navy tracking-tight mb-2">Open Opportunities</h2>
-                <p class="text-gray-500 font-medium text-lg">Filter and search the global recruitment database.</p>
+                <p class="text-gray-500 font-medium text-lg">Search the global recruitment database.</p>
             </div>
 
             <div id="rate-limit-banner" class="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 p-5 rounded-lg mb-8 text-sm font-bold flex flex-col sm:flex-row items-start shadow-sm">
@@ -168,19 +168,9 @@
             </div>
 
             <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-10 flex flex-col md:flex-row gap-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="flex-grow relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="search-input" placeholder="Search job titles or keywords..." class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy focus:ring-1 focus:ring-tng-navy transition-colors text-sm">
-                </div>
-                <div class="w-full md:w-64">
-                    <select id="filter-company" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy transition-colors text-sm font-medium text-gray-700 cursor-pointer appearance-none">
-                        <option value="all">All Companies / Subsidiaries</option>
-                    </select>
-                </div>
-                <div class="w-full md:w-64">
-                    <select id="filter-location" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy transition-colors text-sm font-medium text-gray-700 cursor-pointer appearance-none">
-                        <option value="all">All Global Locations</option>
-                    </select>
+                <div class="flex-grow relative w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text" id="search-input" placeholder="Search job titles, keywords, companies, or locations..." class="w-full pl-14 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy focus:ring-1 focus:ring-tng-navy transition-colors text-base font-medium">
                 </div>
             </div>
 
@@ -241,7 +231,7 @@
           </div>
 
           <div class="bg-gray-50 border-t border-gray-200 p-6 flex-shrink-0 flex justify-end">
-              <button id="jd-apply-btn" class="w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center">
+              <button id="jd-apply-btn" onclick="openATSModal()" class="w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center">
                   Proceed to Application <i class="fa-solid fa-arrow-right ml-3"></i>
               </button>
           </div>
@@ -283,7 +273,7 @@
                   
                   <div class="bg-white border-l-4 border-tng-navy p-5 rounded-r-xl shadow-sm">
                       <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Targeting Role & Subsidiary</label>
-                      <input type="text" id="ats-role-visible" readonly class="w-full bg-transparent border-none text-tng-navy text-lg sm:text-xl font-bold p-0 outline-none cursor-not-allowed">
+                      <input type="text" id="app-role-visible" readonly class="w-full bg-transparent border-none text-tng-navy text-lg sm:text-xl font-bold p-0 outline-none cursor-not-allowed">
                   </div>
 
                   <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
@@ -477,7 +467,6 @@
             applyBtn.disabled = false;
             applyBtn.innerHTML = 'Proceed to Application <i class="fa-solid fa-arrow-right ml-3"></i>';
             applyBtn.className = "w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center";
-            applyBtn.onclick = () => openATSModal();
         }
 
         document.body.classList.add('modal-open');
@@ -498,17 +487,20 @@
     function openATSModal() {
         if(!activeJob || isRateLimited()) return;
         
-        // Close details modal if open
-        closeJobDetails();
-
         // Populate ATS form UI
         document.getElementById('ats-job-title').innerText = activeJob.title;
         document.getElementById('app-role-visible').value = `${activeJob.title} — ${activeJob.company}`; 
         
+        // Close details modal
+        const jdModal = document.getElementById('job-details-modal');
+        jdModal.classList.remove('modal-visible');
+        jdModal.classList.add('modal-hidden');
+
+        // Open ATS modal
         document.body.classList.add('modal-open');
-        const modal = document.getElementById('ats-modal');
-        modal.classList.remove('ats-hidden');
-        modal.classList.add('ats-visible');
+        const atsModal = document.getElementById('ats-modal');
+        atsModal.classList.remove('ats-hidden');
+        atsModal.classList.add('ats-visible');
     }
 
     function closeATSModal() {
@@ -537,10 +529,7 @@
 
       const gridContainer = document.getElementById('jobs-grid');
       const statusContainer = document.getElementById('jobs-status-container');
-      
       const searchInput = document.getElementById('search-input');
-      const filterCompany = document.getElementById('filter-company');
-      const filterLocation = document.getElementById('filter-location');
 
       let attempts = 0;
       const checkSupabase = setInterval(async () => {
@@ -569,13 +558,6 @@
               statusContainer.classList.add('hidden');
               gridContainer.classList.remove('hidden');
               
-              // Populate Filters
-              const uniqueCompanies = [...new Set(jobs.map(j => j.company).filter(Boolean))].sort();
-              const uniqueLocations = [...new Set(jobs.map(j => j.location).filter(Boolean))].sort();
-              
-              uniqueCompanies.forEach(c => filterCompany.add(new Option(c, c)));
-              uniqueLocations.forEach(l => filterLocation.add(new Option(l, l)));
-              
               // Initial Render
               renderJobs(allJobsList);
             }
@@ -584,24 +566,17 @@
               console.error(err);
           }
 
-          // Search & Filter Listeners
-          const applyFilters = () => {
+          // Search Listener (Pure text search)
+          searchInput.addEventListener('input', () => {
               const term = searchInput.value.toLowerCase();
-              const comp = filterCompany.value;
-              const loc = filterLocation.value;
-              
               const filtered = allJobsList.filter(job => {
-                  const matchTerm = job.title.toLowerCase().includes(term) || (job.description && job.description.toLowerCase().includes(term));
-                  const matchComp = comp === 'all' || job.company === comp;
-                  const matchLoc = loc === 'all' || job.location === loc;
-                  return matchTerm && matchComp && matchLoc;
+                  return job.title.toLowerCase().includes(term) || 
+                         (job.description && job.description.toLowerCase().includes(term)) ||
+                         (job.company && job.company.toLowerCase().includes(term)) ||
+                         (job.location && job.location.toLowerCase().includes(term));
               });
               renderJobs(filtered);
-          };
-
-          searchInput.addEventListener('input', applyFilters);
-          filterCompany.addEventListener('change', applyFilters);
-          filterLocation.addEventListener('change', applyFilters);
+          });
 
           // 2. ATS SUBMISSION LOGIC
           const appForm = document.getElementById('application-form');
@@ -620,7 +595,7 @@
                   const getVal = (id) => document.getElementById(id).value.trim();
                   
                   const payload = {
-                      p_role: `${activeJob.title} - ${activeJob.company}`, // Complete role string for DB
+                      p_role: `${activeJob.title} - ${activeJob.company}`,
                       p_first: getVal('app-first'),
                       p_middle: getVal('app-middle') || null,
                       p_last: getVal('app-last'),
