@@ -385,9 +385,9 @@
         }, 800); 
       }
     });
-    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
+    
+    // We removed the mobile menu code here completely because it was causing the crash!
+    
     document.getElementById('current-year').innerText = new Date().getFullYear();
 
     // ==========================================
@@ -448,7 +448,6 @@
 
       const gridContainer = document.getElementById('jobs-grid');
       const statusContainer = document.getElementById('jobs-status-container');
-      const statusText = document.getElementById('jobs-status');
 
       let attempts = 0;
       const maxAttempts = 50; // 5 seconds maximum wait for Supabase to load
@@ -480,10 +479,12 @@
             } else {
               gridContainer.innerHTML = jobs.map((job, index) => {
                 const delay = (index % 5) * 50;
+                
+                // Using the correct employment_type column from your screenshot!
                 return `
                   <div class="bg-white border border-gray-200 p-8 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm hover:shadow-md transition-shadow group" data-aos="fade-up" data-aos-delay="${delay}">
                     <div class="mb-6 md:mb-0">
-                        <span class="inline-block bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3">${job.type || 'Full-Time'}</span>
+                        <span class="inline-block bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3">${job.employment_type || 'Full-Time'}</span>
                         <h3 class="text-3xl font-bold text-tng-navy mb-2 group-hover:text-tng-red transition-colors tracking-tight">${job.title}</h3>
                         <p class="text-gray-500 text-sm font-medium"><i class="fa-solid fa-building mr-2 text-tng-red"></i> ${job.company} &nbsp;&nbsp;|&nbsp;&nbsp; <i class="fa-solid fa-location-dot mr-2 text-tng-red"></i> ${job.location}</p>
                     </div>
@@ -566,7 +567,7 @@
           }
 
         } else if (attempts >= maxAttempts) {
-            // Failsafe timeout if Supabase CDN is blocked by ad-blocker or network issue
+            // Failsafe timeout if Supabase CDN is blocked
             clearInterval(checkSupabase);
             statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Connection Timeout</h3><p class="text-sm text-red-600 font-mono">Unable to initialize secure connection to the database. Please check your internet connection or disable any strict ad-blockers.</p></div>`;
         }
