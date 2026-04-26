@@ -57,7 +57,7 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #001f3f; }
     
-    /* Modal Transitions */
+    /* Unified Modal Transitions */
     .modal-overlay { transition: opacity 0.3s ease, visibility 0.3s ease; }
     .modal-content-slide { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .modal-content-fade { transition: opacity 0.3s ease, transform 0.3s ease; }
@@ -159,14 +159,6 @@
                 <p class="text-gray-500 font-medium text-lg">Search the global recruitment database.</p>
             </div>
 
-            <div id="rate-limit-banner" class="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 p-5 rounded-lg mb-8 text-sm font-bold flex flex-col sm:flex-row items-start shadow-sm">
-                <i class="fa-solid fa-clock-rotate-left mt-1 mr-4 text-xl hidden sm:block"></i>
-                <div class="leading-relaxed">
-                    <span class="block text-base mb-1 uppercase tracking-wide"><i class="fa-solid fa-clock-rotate-left sm:hidden mr-2"></i> System Lock Active</span>
-                    You have recently submitted an application. To prevent system spam and ensure deliberate role selection, please wait 24 hours before submitting another application to the network. You may still browse role details.
-                </div>
-            </div>
-
             <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-10 flex flex-col md:flex-row gap-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="flex-grow relative w-full">
                     <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
@@ -263,10 +255,6 @@
                   <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mb-8 font-mono text-sm sm:text-base break-all font-bold text-gray-800 tracking-wider shadow-inner">
                       <span id="ats-tracking-display">LOADING...</span>
                   </div>
-                  
-                  <div class="bg-red-50 border-l-4 border-tng-red p-4 text-left">
-                      <p class="text-xs sm:text-sm text-tng-red font-bold"><i class="fa-solid fa-lock mr-2"></i> A 24-hour system lock is now active on this device to prevent duplicate submissions.</p>
-                  </div>
               </div>
 
               <form id="application-form" class="space-y-6 sm:space-y-8">
@@ -361,7 +349,7 @@
                           <select id="app-legal" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm focus:border-tng-navy outline-none transition-colors cursor-pointer appearance-none">
                               <option value="">Select an option</option>
                               <option value="true">Yes, I am legally authorized to work.</option>
-                              <option value="false">No, I am not authorized / Require sponsorship.</option>
+                              <option value="false">No, I am not authorized.</option>
                           </select>
                       </div>
                   </div>
@@ -426,23 +414,13 @@
     document.getElementById('current-year').innerText = new Date().getFullYear();
 
     // ==========================================
-    // Global State & Rate Limiting
+    // Global State
     // ==========================================
     let activeJob = null;
     let allJobsList = [];
     
-    function isRateLimited() {
-        const lastApp = localStorage.getItem('tng_last_application');
-        if (lastApp) {
-            const timeDiff = new Date().getTime() - parseInt(lastApp);
-            const hoursDiff = timeDiff / (1000 * 3600);
-            return hoursDiff < 24; 
-        }
-        return false;
-    }
-
     // ==========================================
-    // Modal Controllers
+    // Modal Controllers (FIXED CLASS NAMES)
     // ==========================================
     
     function openJobDetails(jobId) {
@@ -457,18 +435,6 @@
         document.getElementById('jd-badge').innerText = job.employment_type || 'Full-Time';
         document.getElementById('jd-description').innerText = job.description || 'No description provided.';
         
-        // Handle Rate Limit UI inside details modal
-        const applyBtn = document.getElementById('jd-apply-btn');
-        if (isRateLimited()) {
-            applyBtn.disabled = true;
-            applyBtn.innerHTML = '<i class="fa-solid fa-lock mr-2"></i> System Locked (24H Limit)';
-            applyBtn.className = "w-full sm:w-auto bg-gray-300 text-gray-500 font-bold py-3.5 px-8 rounded-lg shadow-inner uppercase tracking-wide text-sm flex justify-center items-center cursor-not-allowed";
-        } else {
-            applyBtn.disabled = false;
-            applyBtn.innerHTML = 'Proceed to Application <i class="fa-solid fa-arrow-right ml-3"></i>';
-            applyBtn.className = "w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center";
-        }
-
         document.body.classList.add('modal-open');
         const modal = document.getElementById('job-details-modal');
         modal.classList.remove('modal-hidden');
@@ -485,7 +451,7 @@
     }
 
     function openATSModal() {
-        if(!activeJob || isRateLimited()) return;
+        if(!activeJob) return;
         
         // Populate ATS form UI
         document.getElementById('ats-job-title').innerText = activeJob.title;
@@ -496,17 +462,17 @@
         jdModal.classList.remove('modal-visible');
         jdModal.classList.add('modal-hidden');
 
-        // Open ATS modal
+        // Open ATS modal (USING CORRECT CLASSES NOW)
         document.body.classList.add('modal-open');
         const atsModal = document.getElementById('ats-modal');
-        atsModal.classList.remove('ats-hidden');
-        atsModal.classList.add('ats-visible');
+        atsModal.classList.remove('modal-hidden');
+        atsModal.classList.add('modal-visible');
     }
 
     function closeATSModal() {
         const modal = document.getElementById('ats-modal');
-        modal.classList.remove('ats-visible');
-        modal.classList.add('ats-hidden');
+        modal.classList.remove('modal-visible');
+        modal.classList.add('modal-hidden');
         document.body.classList.remove('modal-open');
         
         // Reset form UI after transition
@@ -524,9 +490,6 @@
     // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
       
-      const rateLimitBanner = document.getElementById('rate-limit-banner');
-      if(isRateLimited()) rateLimitBanner.classList.remove('hidden');
-
       const gridContainer = document.getElementById('jobs-grid');
       const statusContainer = document.getElementById('jobs-status-container');
       const searchInput = document.getElementById('search-input');
@@ -627,10 +590,6 @@
                       
                       document.getElementById('ats-tracking-display').innerText = data; 
                       document.getElementById('ats-success').classList.remove('hidden');
-                      
-                      // Lockout
-                      localStorage.setItem('tng_last_application', new Date().getTime().toString());
-                      rateLimitBanner.classList.remove('hidden');
                       appForm.reset();
                       
                   } catch (err) {
