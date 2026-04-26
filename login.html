@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Portal Access | Tyler Nicholas Group</title>
+  <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], },
+          colors: {
+            tng: { navy: '#001f3f', navyDark: '#001226', red: '#a6192e', }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #f8fafc; overflow-x: hidden; }
+    .hero-side {
+      background: linear-gradient(rgba(0, 18, 38, 0.85), rgba(0, 31, 63, 0.95)), url('https://static.vecteezy.com/system/resources/previews/015/274/044/non_2x/banner-web-template-abstract-black-curved-shapes-with-lighting-on-dark-background-vector.jpg') no-repeat center center;
+      background-size: cover;
+    }
+    .auth-transition { transition: all 0.3s ease-in-out; }
+  </style>
+</head>
+<body class="font-sans text-gray-900 min-h-screen flex">
+
+  <div class="hidden lg:flex lg:w-1/2 hero-side relative flex-col justify-between p-12 text-white border-r-8 border-tng-red">
+      <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
+      
+      <div class="relative z-10">
+          <a href="index.html" class="inline-block">
+              <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-12 mb-2 filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity">
+          </a>
+          <p class="text-[10px] text-tng-red font-bold uppercase tracking-[0.2em]">Careers Portal</p>
+      </div>
+
+      <div class="relative z-10 max-w-lg">
+          <h1 class="text-4xl xl:text-5xl font-extrabold tracking-tight mb-6 leading-tight">Enter the Global Talent Network.</h1>
+          <p class="text-lg text-gray-300 font-light leading-relaxed mb-8 border-l-2 border-tng-red pl-6">
+              Authentication is required to ensure secure, encrypted communication between candidates and the Tyler Nicholas Group Human Resources division. Your profile grants you access to application tracking and direct 2-way dispatch.
+          </p>
+      </div>
+
+      <div class="relative z-10 text-xs text-gray-500 font-medium">
+          &copy; <span id="year"></span> Tyler Nicholas Group. All rights reserved.
+      </div>
+  </div>
+
+  <div class="w-full lg:w-1/2 flex flex-col justify-center items-center bg-white p-6 sm:p-12 relative">
+      
+      <div class="lg:hidden absolute top-6 left-6 right-6 flex justify-between items-center">
+          <a href="index.html"><img src="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" alt="TNG" class="h-8"></a>
+          <p class="text-[10px] text-tng-red font-bold uppercase tracking-[0.2em]">Careers</p>
+      </div>
+
+      <div class="w-full max-w-md mt-16 lg:mt-0">
+          
+          <div class="flex mb-10 border-b border-gray-200">
+              <button id="btn-login-tab" onclick="switchTab('login')" class="w-1/2 pb-4 text-center font-bold tracking-wide text-sm uppercase transition-colors border-b-2 border-tng-navy text-tng-navy">Sign In</button>
+              <button id="btn-register-tab" onclick="switchTab('register')" class="w-1/2 pb-4 text-center font-bold tracking-wide text-sm uppercase transition-colors border-b-2 border-transparent text-gray-400 hover:text-gray-600">Create Account</button>
+          </div>
+
+          <div id="auth-alert" class="hidden w-full p-4 mb-6 rounded-lg text-sm font-bold border"></div>
+
+          <form id="form-login" class="auth-transition space-y-6">
+              <div>
+                  <h2 class="text-3xl font-extrabold text-tng-navy tracking-tight mb-2">Welcome Back.</h2>
+                  <p class="text-gray-500 text-sm font-light">Access your candidate dashboard to track applications.</p>
+              </div>
+
+              <div>
+                  <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Email Address</label>
+                  <div class="relative">
+                      <i class="fa-regular fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <input type="email" id="login-email" required class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-4 text-sm focus:bg-white focus:border-tng-navy focus:ring-1 focus:ring-tng-navy outline-none transition-all">
+                  </div>
+              </div>
+
+              <div>
+                  <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Secure Password</label>
+                  <div class="relative">
+                      <i class="fa-solid fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <input type="password" id="login-password" required class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-4 text-sm focus:bg-white focus:border-tng-navy focus:ring-1 focus:ring-tng-navy outline-none transition-all">
+                  </div>
+              </div>
+
+              <button type="submit" id="btn-login-submit" class="w-full bg-tng-navy hover:bg-tng-navyDark text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 uppercase tracking-wider text-sm flex justify-center items-center">
+                  Authenticate <i class="fa-solid fa-arrow-right ml-3"></i>
+              </button>
+          </form>
+
+          <form id="form-register" class="hidden auth-transition space-y-6">
+              <div>
+                  <h2 class="text-3xl font-extrabold text-tng-navy tracking-tight mb-2">Join the Network.</h2>
+                  <p class="text-gray-500 text-sm font-light">Create an enterprise profile to begin your application.</p>
+              </div>
+
+              <div>
+                  <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Email Address</label>
+                  <div class="relative">
+                      <i class="fa-regular fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <input type="email" id="reg-email" required class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-4 text-sm focus:bg-white focus:border-tng-navy focus:ring-1 focus:ring-tng-navy outline-none transition-all">
+                  </div>
+              </div>
+
+              <div>
+                  <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Create Password</label>
+                  <div class="relative">
+                      <i class="fa-solid fa-key absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                      <input type="password" id="reg-password" required minlength="8" class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-4 text-sm focus:bg-white focus:border-tng-navy focus:ring-1 focus:ring-tng-navy outline-none transition-all">
+                  </div>
+                  <p class="text-[10px] text-gray-400 mt-2 font-medium"><i class="fa-solid fa-circle-info mr-1"></i> Must be at least 8 characters.</p>
+              </div>
+
+              <div class="pt-2">
+                  <p class="text-xs text-gray-500 font-light leading-relaxed mb-4">
+                      By establishing a profile, you agree to the Tyler Nicholas Group <a href="https://tylernicholasgroup.com/terms/" target="_blank" class="text-tng-red hover:underline font-bold">Terms of Use</a> and <a href="https://tylernicholasgroup.com/privacy/" target="_blank" class="text-tng-red hover:underline font-bold">Privacy Policy</a>.
+                  </p>
+                  <button type="submit" id="btn-reg-submit" class="w-full bg-tng-red hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/20 transition-all transform hover:-translate-y-0.5 uppercase tracking-wider text-sm flex justify-center items-center">
+                      Initialize Profile <i class="fa-solid fa-user-plus ml-3"></i>
+                  </button>
+              </div>
+          </form>
+
+      </div>
+  </div>
+
+  <script>
+    document.getElementById('year').innerText = new Date().getFullYear();
+
+    // UI Tab Switching Logic
+    function switchTab(tab) {
+        const loginForm = document.getElementById('form-login');
+        const regForm = document.getElementById('form-register');
+        const loginBtn = document.getElementById('btn-login-tab');
+        const regBtn = document.getElementById('btn-register-tab');
+        const alertBox = document.getElementById('auth-alert');
+
+        alertBox.classList.add('hidden'); // Clear alerts on switch
+
+        if(tab === 'login') {
+            regForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            loginBtn.className = "w-1/2 pb-4 text-center font-bold tracking-wide text-sm uppercase transition-colors border-b-2 border-tng-navy text-tng-navy";
+            regBtn.className = "w-1/2 pb-4 text-center font-bold tracking-wide text-sm uppercase transition-colors border-b-2 border-transparent text-gray-400 hover:text-gray-600";
+        } else {
+            loginForm.classList.add('hidden');
+            regForm.classList.remove('hidden');
+            regBtn.className = "w-1/2 pb-4 text-center font-bold tracking-wide text-sm uppercase transition-colors border-b-2 border-tng-red text-tng-red";
+            loginBtn.className = "w-1/2 pb-4 text-center font-bold tracking-wide text-sm uppercase transition-colors border-b-2 border-transparent text-gray-400 hover:text-gray-600";
+        }
+    }
+
+    // Helper to show alerts
+    function showAlert(message, isError = true) {
+        const alertBox = document.getElementById('auth-alert');
+        alertBox.classList.remove('hidden', 'bg-red-50', 'border-red-200', 'text-red-700', 'bg-green-50', 'border-green-200', 'text-green-700');
+        
+        if (isError) {
+            alertBox.classList.add('bg-red-50', 'border-red-200', 'text-red-700');
+            alertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-2"></i> ${message}`;
+        } else {
+            alertBox.classList.add('bg-green-50', 'border-green-200', 'text-green-700');
+            alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> ${message}`;
+        }
+    }
+
+    // Supabase Authentication Logic
+    document.addEventListener("DOMContentLoaded", () => {
+        const checkSupabase = setInterval(async () => {
+            if (window.supabase) {
+                clearInterval(checkSupabase); 
+                
+                const sbUrl = 'https://kkvjwmzlezrkwqiizkwp.supabase.co';
+                const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtrdmp3bXpsZXpya3dxaWl6a3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzY2OTksImV4cCI6MjA5MjUxMjY5OX0.Oa44WwSsEhao79sLfkF4HA-dmDbVV3NeT9txvl83460';
+                const supabase = window.supabase.createClient(sbUrl, sbKey);
+
+                // Auto-redirect if already logged in
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    window.location.href = 'dashboard.html';
+                }
+
+                // 1. LOGIN HANDLER
+                document.getElementById('form-login').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = document.getElementById('btn-login-submit');
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+                    
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+
+                    try {
+                        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                        if (error) throw error;
+                        
+                        window.location.href = 'dashboard.html';
+                    } catch (error) {
+                        showAlert(error.message || "Invalid login credentials.");
+                        btn.disabled = false;
+                        btn.innerHTML = 'Authenticate <i class="fa-solid fa-arrow-right ml-3"></i>';
+                    }
+                });
+
+                // 2. REGISTRATION HANDLER
+                document.getElementById('form-register').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = document.getElementById('btn-reg-submit');
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+                    
+                    const email = document.getElementById('reg-email').value;
+                    const password = document.getElementById('reg-password').value;
+
+                    try {
+                        const { data, error } = await supabase.auth.signUp({ email, password });
+                        if (error) throw error;
+                        
+                        // Note: If email confirmation is ON in Supabase, this will ask them to verify.
+                        // Assuming standard setup, we redirect or show success.
+                        if(data.user && data.session) {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            showAlert("Profile created successfully! Please check your email to verify your account.", false);
+                            btn.disabled = false;
+                            btn.innerHTML = 'Initialize Profile <i class="fa-solid fa-user-plus ml-3"></i>';
+                        }
+                    } catch (error) {
+                        showAlert(error.message || "Unable to create profile. Please try again.");
+                        btn.disabled = false;
+                        btn.innerHTML = 'Initialize Profile <i class="fa-solid fa-user-plus ml-3"></i>';
+                    }
+                });
+
+            }
+        }, 100);
+    });
+  </script>
+</body>
+</html>
