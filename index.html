@@ -3,26 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Careers Portal | Tyler Nicholas Group</title>
+  <title>Tyler Nicholas Group | Global Holding Company</title>
+  <meta name="description" content="A global holding company based in Seychelles driving strategic growth across digital verticals, virtual aviation, and impact initiatives.">
   <link rel="icon" href="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" />
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alex+Brush&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { 
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            signature: ['Alex Brush', 'cursive'],
-          },
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], },
           colors: {
             tng: { navy: '#001f3f', navyDark: '#001226', red: '#a6192e', }
           }
@@ -34,7 +31,6 @@
   <style>
     body { background-color: #f8fafc; }
     body.loading { overflow: hidden; height: 100vh; }
-    body.modal-open { overflow: hidden; }
     #loading-screen { transition: opacity 0.6s ease-out, visibility 0.6s; }
     .loader-spinner {
       border: 4px solid rgba(0, 31, 63, 0.1);
@@ -44,33 +40,19 @@
       animation: spin 1s linear infinite;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
     .hero-bg {
-      background: linear-gradient(rgba(0, 31, 63, 0.85), rgba(0, 31, 63, 0.95)), url('https://static.vecteezy.com/system/resources/previews/015/274/044/non_2x/banner-web-template-abstract-black-curved-shapes-with-lighting-on-dark-background-vector.jpg') no-repeat center center;
+      background: linear-gradient(rgba(0, 18, 38, 0.8), rgba(0, 31, 63, 0.95)), url('https://static.vecteezy.com/system/resources/previews/015/274/044/non_2x/banner-web-template-abstract-black-curved-shapes-with-lighting-on-dark-background-vector.jpg') no-repeat center center;
       background-size: cover; background-attachment: fixed;
     }
+    
     .logo-white { filter: brightness(0) invert(1) opacity(0.9); transition: opacity 0.3s; }
     .logo-white:hover { opacity: 1; }
     
-    /* Custom Scrollbars */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #001f3f; }
-    
-    /* Unified Modal Transitions */
-    .modal-overlay { transition: opacity 0.3s ease, visibility 0.3s ease; }
-    .modal-content-slide { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    .modal-content-fade { transition: opacity 0.3s ease, transform 0.3s ease; }
-    
-    .modal-hidden { opacity: 0; visibility: hidden; }
-    .modal-hidden .modal-content-slide { transform: translateX(100%); }
-    .modal-hidden .modal-content-fade { opacity: 0; transform: scale(0.95) translateY(10px); }
-    
-    .modal-visible { opacity: 1; visibility: visible; }
-    .modal-visible .modal-content-slide { transform: translateX(0); }
-    .modal-visible .modal-content-fade { opacity: 1; transform: scale(1) translateY(0); }
-
-    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   </style>
 </head>
 <body class="font-sans text-gray-900 flex flex-col min-h-screen loading">
@@ -78,323 +60,230 @@
   <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white text-tng-navy">
     <div class="loader-spinner mb-6"></div>
     <h2 class="text-xl md:text-2xl font-bold tracking-widest uppercase mb-2">Tyler Nicholas Group</h2>
-    <p class="text-xs font-bold tracking-[0.2em] text-gray-400 mt-2">GLOBAL CAREERS PORTAL</p>
+    <p class="text-xs font-bold tracking-[0.2em] text-tng-red mt-2">INITIALIZING</p>
   </div>
 
   <nav class="bg-tng-navy/95 backdrop-blur-md text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-lg sticky top-0 z-40 border-b border-white/10">
-    <div class="flex items-center space-x-4">
+    <a href="/" class="flex items-center space-x-4">
       <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-10">
-      <div class="hidden sm:block">
-          <div class="font-bold text-xl tracking-wider uppercase leading-none">Tyler Nicholas Group</div>
-          <div class="text-[10px] text-tng-red font-bold uppercase tracking-[0.2em] mt-1">Careers Portal</div>
+      <div class="font-bold text-xl tracking-wider uppercase hidden sm:block">Tyler Nicholas Group</div>
+    </a>
+    
+    <button id="mobile-menu-btn" class="md:hidden text-white hover:text-tng-red transition-colors text-2xl">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <div class="hidden md:flex space-x-8 text-sm items-center font-semibold tracking-wide">
+      <a href="/" class="text-white border-b-2 border-tng-red pb-1">Home</a>
+      
+      <div class="relative group">
+        <button class="text-gray-300 hover:text-white transition-colors flex items-center py-2">
+          About Us <i class="fa-solid fa-chevron-down ml-2 text-[10px]"></i>
+        </button>
+        <div class="absolute left-0 mt-1 w-48 bg-white text-tng-navy rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-gray-100 overflow-hidden transform origin-top group-hover:scale-100 scale-95">
+          <a href="/about/" class="block px-5 py-3 hover:bg-gray-50 border-b border-gray-100 transition-colors">Group Overview</a>
+          <a href="/leadership/" class="block px-5 py-3 hover:bg-gray-50 transition-colors">Our Leadership</a>
+        </div>
       </div>
-    </div>
-    <div>
-      <a href="https://tylernicholasgroup.com/" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-2.5 rounded-lg transition-all shadow-sm text-sm font-bold flex items-center">
-          <i class="fa-solid fa-arrow-left mr-2"></i> <span class="hidden sm:inline">Return to Main Site</span><span class="sm:hidden">Main Site</span>
-      </a>
+
+      <a href="/companies/" class="text-gray-300 hover:text-white transition-colors">Our Companies</a>
+      <a href="https://careers.tylernicholasgroup.com" class="text-gray-300 hover:text-white transition-colors flex items-center">Careers <i class="fa-solid fa-arrow-up-right-from-square ml-1.5 text-[10px] text-gray-400"></i></a>
+      <a href="/news/" class="bg-tng-red text-white px-5 py-2 rounded-md hover:bg-red-800 transition-all shadow-md transform hover:-translate-y-0.5">News & Press</a>
     </div>
   </nav>
 
+  <div id="mobile-menu" class="hidden bg-tng-navyDark border-t border-white/10 px-6 py-6 flex flex-col space-y-4 text-white text-base font-medium md:hidden sticky top-[73px] z-30 shadow-2xl">
+    <a href="/" class="text-tng-red">Home</a>
+    <a href="/about/" class="hover:text-gray-300">About Us</a>
+    <a href="/leadership/" class="hover:text-gray-300 pl-4 border-l-2 border-white/20 text-sm">Our Leadership</a>
+    <a href="/companies/" class="hover:text-gray-300">Our Companies</a>
+    <a href="https://careers.tylernicholasgroup.com" class="hover:text-gray-300">Careers</a>
+    <a href="/news/" class="hover:text-gray-300">News & Press</a>
+  </div>
+
   <main class="flex-grow w-full flex flex-col items-center">
     
-    <header class="hero-bg w-full py-32 flex items-center justify-center px-4 shadow-inner border-b-4 border-tng-red">
-      <div class="max-w-4xl text-center z-10" data-aos="fade-up">
-        <p class="text-tng-red font-bold tracking-widest uppercase mb-4 text-sm">Global Talent Network</p>
-        <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight text-white uppercase drop-shadow-lg">
-          Shape the Future of Enterprise
-        </h1>
-        <p class="text-lg md:text-xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
-          Join a dynamic global holding company. We are seeking visionaries, operators, and digital architects to drive growth across our diverse portfolio.
+    <header class="hero-bg w-full min-h-[85vh] flex items-center px-6 md:px-12 border-b-8 border-tng-red relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-tng-red rounded-full mix-blend-multiply filter blur-[150px] opacity-20 animate-pulse"></div>
+      
+      <div class="max-w-7xl mx-auto w-full z-10 relative" data-aos="fade-up">
+        <p class="text-tng-red font-bold tracking-[0.3em] uppercase mb-6 text-sm flex items-center">
+            <span class="w-8 h-px bg-tng-red mr-4"></span> Headquartered in Seychelles
         </p>
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-8 tracking-tighter text-white leading-[1.1]">
+          Capital.<br>Infrastructure.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-tng-red">Innovation.</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-300 font-light max-w-2xl leading-relaxed mb-12">
+          The Tyler Nicholas Group is a global holding company accelerating growth across decentralized digital enterprises, virtual aviation networks, and community impact initiatives.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-5">
+            <a href="/companies/" class="bg-tng-red hover:bg-red-800 text-white font-bold py-4 px-10 rounded-none shadow-lg transition-transform transform hover:-translate-y-1 text-sm uppercase tracking-widest text-center flex items-center justify-center">
+                Explore Portfolio <i class="fa-solid fa-arrow-right ml-3"></i>
+            </a>
+            <a href="/about/" class="bg-transparent border border-white/30 hover:bg-white hover:text-tng-navy text-white font-bold py-4 px-10 rounded-none transition-all text-sm uppercase tracking-widest text-center">
+                Corporate Overview
+            </a>
+        </div>
       </div>
     </header>
 
-    <section class="w-full bg-white py-24 md:py-32 border-b border-gray-200">
-        <div class="max-w-4xl mx-auto px-6 md:px-12 text-center" data-aos="fade-up">
-            <h2 class="text-xs text-tng-red font-bold uppercase tracking-widest mb-4 border-b-4 border-tng-red inline-block pb-2">Human Resources Mandate</h2>
-            <h3 class="text-3xl md:text-5xl font-extrabold text-tng-navy mb-10 tracking-tight">To the Innovators & Builders,</h3>
-            <div class="space-y-6 md:space-y-8 text-gray-600 font-light leading-relaxed text-lg md:text-xl mb-12 text-left md:text-center">
-                <p>At the Tyler Nicholas Group, we do not simply hire employees; we invest in leaders. Our organization is built on a decentralized model of execution, which means we require individuals who possess not only exceptional technical skills, but the autonomy and vision to drive entire vertical markets.</p>
-                <p>We operate with the understanding that global talent is boundless, yet opportunity is often siloed. Our mission in Human Resources is to shatter those silos. Whether you are engineering virtual aviation infrastructure, managing high-stakes corporate logistics, or leading our non-profit community initiatives, your merit dictates your trajectory here—nothing else.</p>
-                <p>We demand excellence, precision, and unyielding ethical integrity. In return, we offer unparalleled global mobility, corporate backing, and the platform to build something that outlasts us all. We look forward to reviewing your application.</p>
+    <section class="w-full bg-white py-32 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+            
+            <div class="lg:w-1/2" data-aos="fade-right">
+                <h2 class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-4">The TNG Philosophy</h2>
+                <h3 class="text-4xl md:text-5xl font-extrabold text-tng-navy tracking-tight leading-tight mb-8">Building the Framework for Tomorrow's Enterprise.</h3>
+                <div class="space-y-6 text-gray-600 font-light text-lg leading-relaxed border-l-2 border-tng-red pl-6">
+                    <p>
+                        We do not just acquire businesses; we build the infrastructure they need to scale. TNG operates on a decentralized model of execution, empowering visionary founders and digital architects with the legal, structural, and technological capital required to dominate their verticals.
+                    </p>
+                    <p>
+                        From deploying advanced virtual aviation architectures to funding non-profit environmental and community impact programs, the Tyler Nicholas Group is engineered for systemic precision and limitless ambition.
+                    </p>
+                </div>
             </div>
-            <div class="pt-8 border-t border-gray-200 inline-block px-12">
-                <p class="font-bold text-tng-navy text-xl">The Human Resources Department</p>
-                <p class="text-sm text-gray-500 uppercase tracking-widest font-bold mt-2">Tyler Nicholas Group</p>
+
+            <div class="lg:w-1/2 w-full" data-aos="fade-left">
+                <div class="grid grid-cols-2 gap-px bg-gray-200 border border-gray-200">
+                    <div class="bg-white p-10 flex flex-col justify-center items-start hover:bg-gray-50 transition-colors">
+                        <span class="text-5xl font-extrabold text-tng-navy mb-2 tracking-tighter">0<span class="text-tng-red text-2xl font-bold ml-1">USD</span></span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Incubator Upfront Cost</span>
+                    </div>
+                    <div class="bg-white p-10 flex flex-col justify-center items-start hover:bg-gray-50 transition-colors">
+                        <span class="text-5xl font-extrabold text-tng-navy mb-2 tracking-tighter">100<span class="text-tng-red text-2xl font-bold ml-1">%</span></span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Digital Integration</span>
+                    </div>
+                    <div class="bg-white p-10 flex flex-col justify-center items-start hover:bg-gray-50 transition-colors">
+                        <span class="text-5xl font-extrabold text-tng-navy mb-2 tracking-tighter">Global</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Talent Acquisition</span>
+                    </div>
+                    <div class="bg-white p-10 flex flex-col justify-center items-start hover:bg-gray-50 transition-colors">
+                        <span class="text-5xl font-extrabold text-tng-navy mb-2 tracking-tighter">24/7</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Network Operations</span>
+                    </div>
+                </div>
             </div>
+
         </div>
     </section>
 
-    <section class="w-full bg-tng-navyDark py-24 md:py-32 text-white border-t-8 border-tng-red overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row gap-12 md:gap-24">
-            <div class="md:w-1/3" data-aos="fade-right">
-                <div class="md:sticky md:top-32">
-                    <h2 class="text-xs md:text-sm text-tng-red font-bold uppercase tracking-widest mb-3">Corporate Ethics</h2>
-                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">The<br>Meritocracy<br>Mandate.</h3>
-                </div>
-            </div>
-            <div class="md:w-2/3 space-y-12 md:space-y-16" data-aos="fade-left">
-                <div class="border-l-2 border-white/20 pl-6 md:pl-12">
-                    <h4 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Absolute Equality</h4>
-                    <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed">The Tyler Nicholas Group strictly adheres to a policy of Equal Employment Opportunity. We do not discriminate on the basis of race, color, religion, gender identity, sexual orientation, national origin, or disability. We hire strictly based on capability, vision, and alignment with our corporate standards. Talent is universal.</p>
-                </div>
-                <div class="border-l-2 border-white/20 pl-6 md:pl-12">
-                    <h4 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Borderless Ambition</h4>
-                    <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed">Excellence is not confined to a single timezone. Because of our highly digital infrastructure, many of our corporate and subsidiary roles support remote, cross-border execution. We actively seek out the best minds on the planet, regardless of their geographical location.</p>
-                </div>
-                <div class="border-l-2 border-tng-red pl-6 md:pl-12">
-                    <h4 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Ethical Stewardship</h4>
-                    <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed">A high-performance culture is only sustainable if it is built on respect. We expect our staff to uphold the highest standards of human rights and dignity. Integrity is a non-negotiable foundation of our enterprise, and it dictates how we interact with colleagues, partners, and the global community.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="w-full bg-gray-50 py-24 min-h-[800px]" id="open-roles">
+    <section class="w-full bg-tng-navyDark py-32 text-white">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
             
-            <div class="mb-10" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-tng-navy tracking-tight mb-2">Open Opportunities</h2>
-                <p class="text-gray-500 font-medium text-lg">Search the global recruitment database.</p>
+            <div class="mb-24" data-aos="fade-up">
+                <h2 class="text-sm text-tng-red font-bold uppercase tracking-widest mb-3">Strategic Verticals</h2>
+                <h3 class="text-4xl md:text-5xl font-extrabold tracking-tight">Our Core Operations.</h3>
             </div>
 
-            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-10 flex flex-col md:flex-row gap-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="flex-grow relative w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" id="search-input" placeholder="Search job titles, keywords, companies, or locations..." class="w-full pl-14 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy focus:ring-1 focus:ring-tng-navy transition-colors text-base font-medium">
+            <div class="space-y-32">
+                
+                <div class="flex flex-col md:flex-row gap-12 items-center" data-aos="fade-up">
+                    <div class="md:w-5/12">
+                        <h4 class="text-3xl font-bold mb-4 tracking-tight">The Subsidiary Network</h4>
+                        <p class="text-gray-400 font-light leading-relaxed mb-8 text-lg">A highly diversified portfolio of wholly-owned and strategically partnered enterprises. We manage operations spanning from advanced e-commerce platforms to the architecture of massive virtual aviation groups.</p>
+                        <a href="/companies/" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-tng-red hover:text-white transition-colors group">
+                            View Operating Companies <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                    <div class="md:w-7/12 w-full h-[400px] bg-white/5 border border-white/10 rounded-sm relative overflow-hidden flex items-center justify-center">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                        <i class="fa-solid fa-network-wired text-7xl text-white/20"></i>
+                    </div>
                 </div>
-            </div>
 
-            <div id="jobs-status-container" class="flex flex-col items-center justify-center py-16">
-                <div class="loader-spinner mb-4 border-tng-navy/20 border-left-tng-red"></div>
-                <p class="text-gray-500 italic text-lg" id="jobs-status">Accessing secure database...</p>
-            </div>
-
-            <div id="jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                <div class="flex flex-col md:flex-row-reverse gap-12 items-center" data-aos="fade-up">
+                    <div class="md:w-5/12">
+                        <h4 class="text-3xl font-bold mb-4 tracking-tight">TNG Ventures & Incubator</h4>
+                        <p class="text-gray-400 font-light leading-relaxed mb-8 text-lg">We provide the ultimate launchpad. For $0 upfront capital, we supply the backend infrastructure, legal framing, and executive mentorship required to launch your vision. In exchange, you become a strategic equity partner under the TNG umbrella.</p>
+                        <a href="/companies/#ventures" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-tng-red hover:text-white transition-colors group">
+                            Pitch Your Business <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                    <div class="md:w-7/12 w-full h-[400px] bg-tng-red/10 border border-tng-red/30 rounded-sm relative overflow-hidden flex items-center justify-center">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"></div>
+                        <i class="fa-solid fa-rocket text-7xl text-tng-red/40"></i>
+                    </div>
                 </div>
 
+            </div>
+
+        </div>
+    </section>
+
+    <section class="w-full bg-tng-red py-24 text-center border-t border-red-900/50">
+        <div class="max-w-4xl mx-auto px-6" data-aos="zoom-in">
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Access the Global Talent Network.</h2>
+            <p class="text-lg text-red-100 mb-10 leading-relaxed font-light max-w-2xl mx-auto">
+                Merit dictates your trajectory. Enter our dedicated Applicant Tracking System to view open roles across our corporate headquarters and global subsidiaries.
+            </p>
+            <a href="https://careers.tylernicholasgroup.com" class="inline-flex items-center justify-center bg-white text-tng-red font-bold py-4 px-10 rounded-none shadow-xl hover:bg-tng-navy hover:text-white transition-all text-sm uppercase tracking-widest group">
+                Enter ATS Portal <i class="fa-solid fa-arrow-up-right-from-square ml-3 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+            </a>
         </div>
     </section>
 
   </main>
 
-  <footer class="bg-tng-navyDark text-white pt-16 pb-10 px-6 md:px-12 mt-auto border-t-[6px] border-tng-red">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-      <div class="mb-6 md:mb-0 text-center md:text-left">
-          <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-10 mx-auto md:mx-0 mb-4 opacity-50 grayscale">
-          <p class="text-sm text-gray-400 font-medium">Tyler Nicholas Group | Global Talent Acquisition</p>
+  <footer class="bg-tng-navyDark text-white pt-20 pb-10 px-6 md:px-12 mt-auto border-t-[6px] border-tng-red">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 items-start mb-16">
+      
+      <div class="flex flex-col items-start lg:col-span-1">
+        <a href="/" class="block">
+            <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-12 mb-6">
+        </a>
+        <p class="text-sm text-gray-400 mb-8 max-w-sm leading-relaxed font-medium">
+          A global holding company driving strategic growth and synergy across diverse verticals.
+        </p>
       </div>
-      <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-400">
-          <a href="https://tylernicholasgroup.com/privacy/" class="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="https://tylernicholasgroup.com/terms/" class="hover:text-white transition-colors">Terms of Use</a>
-          <a href="https://tylernicholasgroup.com/accessibility/" class="hover:text-white transition-colors">Accessibility</a>
+      
+      <div class="flex flex-col space-y-4 text-sm font-medium">
+        <h4 class="font-bold text-lg mb-2 text-white tracking-wide">Corporate</h4>
+        <a href="/about/" class="text-gray-400 hover:text-tng-red transition-colors">About Us</a>
+        <a href="/leadership/" class="text-gray-400 hover:text-tng-red transition-colors">Our Leadership</a>
+        <a href="/companies/" class="text-gray-400 hover:text-tng-red transition-colors">Our Companies</a>
+        <a href="https://careers.tylernicholasgroup.com" class="text-gray-400 hover:text-tng-red transition-colors">Careers</a>
+      </div>
+      
+      <div class="flex flex-col space-y-4 text-sm font-medium">
+        <h4 class="font-bold text-lg mb-2 text-white tracking-wide">Legal</h4>
+        <a href="/privacy/" class="text-gray-400 hover:text-tng-red transition-colors">Privacy Policy</a>
+        <a href="/terms/" class="text-gray-400 hover:text-tng-red transition-colors">Terms of Use</a>
+        <a href="/cookie-policy/" class="text-gray-400 hover:text-tng-red transition-colors">Cookie Policy</a>
+        <a href="/accessibility/" class="text-gray-400 hover:text-tng-red transition-colors">Accessibility Statement</a>
+      </div>
+      
+      <div class="flex flex-col space-y-4 text-sm font-medium">
+        <h4 class="font-bold text-lg mb-2 text-white tracking-wide">Connect</h4>
+        <a href="/contact/" class="text-gray-400 hover:text-tng-red transition-colors">Contact Us</a>
+        <a href="https://www.trustpilot.com/review/tylernicholasgroup.com" target="_blank" rel="noopener noreferrer" class="pt-2 block">
+          <img src="https://www.worcestershirefencing.co.uk/wp-content/uploads/2023/11/trustpilot-logo-snijpunt.1600x680x1.png" alt="Trustpilot" class="h-6 object-contain logo-white">
+        </a>
+        <div class="flex space-x-4 mt-4 pt-2">
+          <a href="https://www.linkedin.com/company/tylernicholas-group/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#0A66C2] hover:scale-110 transition-all">
+            <i class="fa-brands fa-linkedin-in text-lg"></i>
+          </a>
+          <a href="https://www.instagram.com/tylernicholasgroup/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#E1306C] hover:scale-110 transition-all">
+            <i class="fa-brands fa-instagram text-lg"></i>
+          </a>
+          <a href="https://x.com/tyler_n_group" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-black hover:scale-110 transition-all">
+            <i class="fa-brands fa-x-twitter text-lg"></i>
+          </a>
+          <a href="https://www.youtube.com/@TylerNicholasGroup" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#FF0000] hover:scale-110 transition-all">
+            <i class="fa-brands fa-youtube text-lg"></i>
+          </a>
+          <a href="https://www.facebook.com/tylernicholasgroup" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#1877F2] hover:scale-110 transition-all">
+            <i class="fa-brands fa-facebook-f text-lg"></i>
+          </a>
+        </div>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto border-t border-white/10 pt-8 mt-8 text-center text-xs text-gray-500 font-medium">
+    
+    <div class="max-w-7xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 font-medium">
       <p>&copy; <span id="current-year"></span> Tyler Nicholas Group. All rights reserved.</p>
+      <a href="https://tyler.tylernicholasgroup.com" target="_blank" class="mt-4 md:mt-0 hover:text-white transition-colors">By Tyler Nicholas</a>
     </div>
   </footer>
-
-
-  <div id="job-details-modal" class="fixed inset-0 z-[90000] bg-tng-navyDark/80 backdrop-blur-sm modal-overlay modal-hidden flex items-center justify-center p-4 sm:p-6">
-      <div class="modal-content-fade bg-white w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
-          
-          <div class="bg-gray-50 border-b border-gray-200 px-6 py-5 sm:px-8 sm:py-6 flex justify-between items-start flex-shrink-0">
-              <div class="pr-8">
-                  <span id="jd-badge" class="inline-block bg-blue-50 text-blue-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3 border border-blue-100">Full-Time</span>
-                  <h2 id="jd-title" class="text-2xl sm:text-3xl font-extrabold text-tng-navy tracking-tight leading-tight mb-2">Job Title</h2>
-                  <p class="text-gray-600 text-sm sm:text-base font-medium flex flex-wrap gap-x-4 gap-y-2">
-                      <span><i class="fa-solid fa-building text-tng-red mr-1"></i> <span id="jd-company">Company</span></span>
-                      <span class="hidden sm:inline text-gray-300">|</span>
-                      <span><i class="fa-solid fa-location-dot text-tng-red mr-1"></i> <span id="jd-location">Location</span></span>
-                  </p>
-              </div>
-              <button onclick="closeJobDetails()" class="absolute top-6 right-6 w-10 h-10 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-full flex items-center justify-center transition-colors focus:outline-none">
-                  <i class="fa-solid fa-xmark text-lg"></i>
-              </button>
-          </div>
-
-          <div class="flex-grow overflow-y-auto px-6 py-6 sm:px-8 sm:py-8 bg-white custom-scroll">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Role Overview & Responsibilities</h3>
-              <div id="jd-description" class="prose prose-sm sm:prose-base max-w-none text-gray-700 font-light leading-relaxed whitespace-pre-wrap">
-                  Loading description...
-              </div>
-          </div>
-
-          <div class="bg-gray-50 border-t border-gray-200 p-6 flex-shrink-0 flex justify-end">
-              <button id="jd-apply-btn" onclick="openATSModal()" class="w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center">
-                  Proceed to Application <i class="fa-solid fa-arrow-right ml-3"></i>
-              </button>
-          </div>
-      </div>
-  </div>
-
-
-  <div id="ats-modal" class="fixed inset-0 z-[99999] bg-tng-navyDark/90 backdrop-blur-sm modal-overlay modal-hidden flex justify-end">
-      
-      <div class="modal-content-slide w-full md:w-[700px] lg:w-[800px] bg-gray-50 h-full shadow-2xl flex flex-col relative">
-          
-          <div class="bg-tng-navy text-white px-6 py-5 sm:px-8 sm:py-6 flex justify-between items-center border-b-4 border-tng-red flex-shrink-0">
-              <div>
-                  <p class="text-[10px] sm:text-xs font-bold text-gray-400 tracking-widest uppercase mb-1">TNG Applicant Tracking System</p>
-                  <h2 id="ats-job-title" class="text-xl sm:text-2xl font-extrabold tracking-tight truncate max-w-[250px] sm:max-w-md">Applying for Role</h2>
-              </div>
-              <button onclick="closeATSModal()" class="w-10 h-10 bg-white/10 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors focus:outline-none">
-                  <i class="fa-solid fa-xmark text-xl"></i>
-              </button>
-          </div>
-
-          <div class="flex-grow overflow-y-auto p-4 sm:p-8 custom-scroll">
-              
-              <div id="ats-success" class="hidden bg-white p-8 sm:p-12 rounded-2xl border border-green-200 shadow-sm text-center mt-4">
-                  <div class="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i class="fa-solid fa-check"></i></div>
-                  <h3 class="text-2xl sm:text-3xl font-bold text-tng-navy mb-3">Application Secured</h3>
-                  <p class="text-gray-600 mb-8 font-light leading-relaxed">Your application has been encrypted and safely transmitted to the Human Resources division. Please save your tracking number below for your records.</p>
-                  
-                  <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mb-8 font-mono text-sm sm:text-base break-all font-bold text-gray-800 tracking-wider shadow-inner">
-                      <span id="ats-tracking-display">LOADING...</span>
-                  </div>
-              </div>
-
-              <form id="application-form" class="space-y-6 sm:space-y-8">
-                  
-                  <div class="bg-white border-l-4 border-tng-navy p-5 rounded-r-xl shadow-sm">
-                      <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Targeting Role & Subsidiary</label>
-                      <input type="text" id="app-role-visible" readonly class="w-full bg-transparent border-none text-tng-navy text-lg sm:text-xl font-bold p-0 outline-none cursor-not-allowed">
-                  </div>
-
-                  <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
-                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs mr-3">1</span> Personal Identification</h3>
-                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">First Name *</label>
-                              <input type="text" id="app-first" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Middle Name</label>
-                              <input type="text" id="app-middle" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Last Name *</label>
-                              <input type="text" id="app-last" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                      </div>
-                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Date of Birth *</label>
-                              <input type="date" id="app-dob" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors text-gray-700">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Phone Number *</label>
-                              <input type="tel" id="app-phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                      </div>
-                  </div>
-
-                  <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
-                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs mr-3">2</span> Residency & Contact</h3>
-                      <div class="mb-4">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Email Address *</label>
-                          <input type="email" id="app-email" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                      </div>
-                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Country *</label>
-                              <input type="text" id="app-country" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">State/Province</label>
-                              <input type="text" id="app-state" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">City *</label>
-                              <input type="text" id="app-city" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                      </div>
-                  </div>
-
-                  <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
-                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs mr-3">3</span> Experience & Assets</h3>
-                      
-                      <div class="mb-5">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5"><i class="fa-solid fa-link text-tng-red mr-1"></i> Link to Resume / CV *</label>
-                          <input type="url" id="app-resume" required placeholder="Google Drive, Dropbox, external host, etc." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          <p class="text-[10px] text-gray-400 mt-1.5 ml-1">Please ensure the link viewing permissions are set to public.</p>
-                      </div>
-
-                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5"><i class="fa-brands fa-linkedin text-blue-600 mr-1"></i> LinkedIn Profile</label>
-                              <input type="url" id="app-linkedin" placeholder="https://linkedin.com/in/..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5"><i class="fa-solid fa-globe text-gray-500 mr-1"></i> Portfolio / Website</label>
-                              <input type="url" id="app-portfolio" placeholder="https://..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                      </div>
-
-                      <div class="mb-5">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Summarize your relevant experience *</label>
-                          <textarea id="app-exp" required rows="4" placeholder="Briefly highlight your core competencies..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors resize-none"></textarea>
-                      </div>
-                      
-                      <div class="mb-5">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Why Tyler Nicholas Group? *</label>
-                          <textarea id="app-why" required rows="3" placeholder="What drives you to join our corporate network?" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors resize-none"></textarea>
-                      </div>
-
-                      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                          <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Are you legally authorized to work in your country of residency? *</label>
-                          <select id="app-legal" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm focus:border-tng-navy outline-none transition-colors cursor-pointer appearance-none">
-                              <option value="">Select an option</option>
-                              <option value="true">Yes, I am legally authorized to work.</option>
-                              <option value="false">No, I am not authorized.</option>
-                          </select>
-                      </div>
-                  </div>
-
-                  <div class="bg-gray-50 p-5 sm:p-7 rounded-2xl border border-gray-200">
-                      <div class="flex items-center justify-between mb-3 border-b border-gray-200 pb-3">
-                          <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Voluntary EEO Disclosure</h3>
-                          <span class="bg-white border border-gray-200 text-gray-500 text-[10px] font-bold px-2.5 py-1 rounded shadow-sm uppercase tracking-wider">Optional</span>
-                      </div>
-                      <p class="text-xs text-gray-500 leading-relaxed mb-5 font-medium">TNG is an equal opportunity employer. These answers will NOT be visible to hiring managers during the review process and are kept strictly confidential for anonymous corporate compliance reporting.</p>
-                      
-                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Gender</label>
-                              <select id="app-gender" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Male">Male</option><option value="Female">Female</option><option value="Non-binary">Non-binary</option></select>
-                          </div>
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Race / Ethnicity</label>
-                              <select id="app-race" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Asian">Asian</option><option value="Black">Black / African Descent</option><option value="Hispanic">Hispanic / Latino</option><option value="White">White / Caucasian</option><option value="Other">Other / Mixed</option></select>
-                          </div>
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Veteran Status</label>
-                              <select id="app-veteran" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Veteran">Protected Veteran</option><option value="Not Veteran">Not a Protected Veteran</option></select>
-                          </div>
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Disability Status</label>
-                              <select id="app-disability" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Yes">Yes, I have a disability</option><option value="No">No, I do not have a disability</option></select>
-                          </div>
-                      </div>
-                  </div>
-
-              </form>
-          </div>
-
-          <div id="ats-footer" class="bg-white border-t border-gray-200 p-5 sm:p-6 flex-shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-              <p id="app-error" class="text-red-500 text-sm font-bold text-center hidden mb-3 bg-red-50 p-2 rounded"></p>
-              <div class="flex gap-4">
-                  <button type="button" onclick="closeATSModal()" class="w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 rounded-xl transition-colors text-sm uppercase tracking-wide hidden sm:block">Cancel</button>
-                  <button type="submit" form="application-form" id="app-submit-btn" class="w-full sm:w-2/3 bg-tng-red hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/20 transition-all transform hover:-translate-y-0.5 uppercase tracking-wider text-sm flex justify-center items-center">
-                      Submit Application <i class="fa-solid fa-paper-plane ml-3"></i>
-                  </button>
-              </div>
-          </div>
-      </div>
-  </div>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
@@ -407,239 +296,17 @@
           loader.style.opacity = '0';
           loader.style.visibility = 'hidden';
           document.body.classList.remove('loading');
-          AOS.init({ duration: 800, once: true, offset: 20 });
+          AOS.init({ duration: 1000, once: true, offset: 40 });
         }, 800); 
       }
     });
-    document.getElementById('current-year').innerText = new Date().getFullYear();
 
-    // ==========================================
-    // Global State
-    // ==========================================
-    let activeJob = null;
-    let allJobsList = [];
-    
-    // ==========================================
-    // Modal Controllers (FIXED CLASS NAMES)
-    // ==========================================
-    
-    function openJobDetails(jobId) {
-        const job = allJobsList.find(j => j.id === jobId);
-        if(!job) return;
-        activeJob = job;
-
-        // Populate Details Modal
-        document.getElementById('jd-title').innerText = job.title;
-        document.getElementById('jd-company').innerText = job.company;
-        document.getElementById('jd-location').innerText = job.location;
-        document.getElementById('jd-badge').innerText = job.employment_type || 'Full-Time';
-        document.getElementById('jd-description').innerText = job.description || 'No description provided.';
-        
-        document.body.classList.add('modal-open');
-        const modal = document.getElementById('job-details-modal');
-        modal.classList.remove('modal-hidden');
-        modal.classList.add('modal-visible');
-    }
-
-    function closeJobDetails() {
-        const modal = document.getElementById('job-details-modal');
-        modal.classList.remove('modal-visible');
-        modal.classList.add('modal-hidden');
-        if(!document.getElementById('ats-modal').classList.contains('modal-visible')) {
-            document.body.classList.remove('modal-open');
-        }
-    }
-
-    function openATSModal() {
-        if(!activeJob) return;
-        
-        // Populate ATS form UI
-        document.getElementById('ats-job-title').innerText = activeJob.title;
-        document.getElementById('app-role-visible').value = `${activeJob.title} — ${activeJob.company}`; 
-        
-        // Close details modal
-        const jdModal = document.getElementById('job-details-modal');
-        jdModal.classList.remove('modal-visible');
-        jdModal.classList.add('modal-hidden');
-
-        // Open ATS modal (USING CORRECT CLASSES NOW)
-        document.body.classList.add('modal-open');
-        const atsModal = document.getElementById('ats-modal');
-        atsModal.classList.remove('modal-hidden');
-        atsModal.classList.add('modal-visible');
-    }
-
-    function closeATSModal() {
-        const modal = document.getElementById('ats-modal');
-        modal.classList.remove('modal-visible');
-        modal.classList.add('modal-hidden');
-        document.body.classList.remove('modal-open');
-        
-        // Reset form UI after transition
-        setTimeout(() => {
-            document.getElementById('application-form').classList.remove('hidden');
-            document.getElementById('ats-footer').classList.remove('hidden');
-            document.getElementById('ats-success').classList.add('hidden');
-            document.getElementById('app-submit-btn').classList.remove('hidden');
-        }, 400);
-    }
-
-
-    // ==========================================
-    // Core Application Initialization
-    // ==========================================
-    document.addEventListener("DOMContentLoaded", () => {
-      
-      const gridContainer = document.getElementById('jobs-grid');
-      const statusContainer = document.getElementById('jobs-status-container');
-      const searchInput = document.getElementById('search-input');
-
-      let attempts = 0;
-      const checkSupabase = setInterval(async () => {
-        attempts++;
-        if (window.supabase) {
-          clearInterval(checkSupabase); 
-          
-          const sbUrl = 'https://kkvjwmzlezrkwqiizkwp.supabase.co';
-          const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtrdmp3bXpsZXpya3dxaWl6a3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzY2OTksImV4cCI6MjA5MjUxMjY5OX0.Oa44WwSsEhao79sLfkF4HA-dmDbVV3NeT9txvl83460';
-          const supabase = window.supabase.createClient(sbUrl, sbKey);
-
-          // 1. FETCH JOBS
-          try {
-            const { data: jobs, error } = await supabase
-                .from('tng_job_postings')
-                .select('*')
-                .eq('is_active', true)
-                .order('created_at', { ascending: false });
-            
-            if (error) throw error;
-
-            if (!jobs || jobs.length === 0) {
-              statusContainer.innerHTML = `<p class="text-gray-500 italic text-center text-lg">No open positions available at this time. Please check back later.</p>`;
-            } else {
-              allJobsList = jobs;
-              statusContainer.classList.add('hidden');
-              gridContainer.classList.remove('hidden');
-              
-              // Initial Render
-              renderJobs(allJobsList);
-            }
-          } catch (err) {
-              statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Database Connection Error</h3><p class="text-sm text-red-600 font-mono">${err.message || JSON.stringify(err)}</p></div>`;
-              console.error(err);
-          }
-
-          // Search Listener (Pure text search)
-          searchInput.addEventListener('input', () => {
-              const term = searchInput.value.toLowerCase();
-              const filtered = allJobsList.filter(job => {
-                  return job.title.toLowerCase().includes(term) || 
-                         (job.description && job.description.toLowerCase().includes(term)) ||
-                         (job.company && job.company.toLowerCase().includes(term)) ||
-                         (job.location && job.location.toLowerCase().includes(term));
-              });
-              renderJobs(filtered);
-          });
-
-          // 2. ATS SUBMISSION LOGIC
-          const appForm = document.getElementById('application-form');
-          if(appForm) {
-              appForm.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                  if(!activeJob) return;
-
-                  const btn = document.getElementById('app-submit-btn');
-                  const errorMsg = document.getElementById('app-error');
-                  
-                  btn.disabled = true;
-                  btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Encrypting & Transmitting...';
-                  errorMsg.classList.add('hidden');
-
-                  const getVal = (id) => document.getElementById(id).value.trim();
-                  
-                  const payload = {
-                      p_role: `${activeJob.title} - ${activeJob.company}`,
-                      p_first: getVal('app-first'),
-                      p_middle: getVal('app-middle') || null,
-                      p_last: getVal('app-last'),
-                      p_dob: getVal('app-dob'),
-                      p_country: getVal('app-country'),
-                      p_state: getVal('app-state') || null,
-                      p_city: getVal('app-city'),
-                      p_email: getVal('app-email'),
-                      p_phone: getVal('app-phone'),
-                      p_linkedin: getVal('app-linkedin') || null,
-                      p_portfolio: getVal('app-portfolio') || null,
-                      p_resume: getVal('app-resume'),
-                      p_legal: getVal('app-legal') === 'true',
-                      p_exp: getVal('app-exp'),
-                      p_why: getVal('app-why'),
-                      p_gender: getVal('app-gender') || null,
-                      p_race: getVal('app-race') || null,
-                      p_veteran: getVal('app-veteran') || null,
-                      p_disability: getVal('app-disability') || null
-                  };
-
-                  try {
-                      const { data, error } = await supabase.rpc('submit_job_application', payload);
-                      if (error) throw error;
-                      
-                      // Success View
-                      appForm.classList.add('hidden');
-                      document.getElementById('ats-footer').classList.add('hidden');
-                      
-                      document.getElementById('ats-tracking-display').innerText = data; 
-                      document.getElementById('ats-success').classList.remove('hidden');
-                      appForm.reset();
-                      
-                  } catch (err) {
-                      errorMsg.innerText = "Transmission failed: " + (err.message || "Unknown error");
-                      errorMsg.classList.remove('hidden');
-                      btn.disabled = false;
-                      btn.innerHTML = 'Submit Application <i class="fa-solid fa-paper-plane ml-3"></i>';
-                  }
-              });
-          }
-
-        } else if (attempts >= 50) {
-            clearInterval(checkSupabase);
-            statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Connection Timeout</h3><p class="text-sm text-red-600 font-mono">Unable to initialize secure connection. Please disable strict ad-blockers.</p></div>`;
-        }
-      }, 100); 
-
-      // Render Helper
-      function renderJobs(jobsArray) {
-          if(jobsArray.length === 0) {
-              gridContainer.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 italic">No roles match your current search criteria.</div>`;
-              return;
-          }
-          
-          gridContainer.innerHTML = jobsArray.map((job) => {
-            return `
-              <div class="bg-white border border-gray-200 rounded-2xl flex flex-col shadow-sm hover:shadow-xl hover:border-gray-300 transition-all duration-300 group overflow-hidden">
-                <div class="p-6 sm:p-8 flex-grow">
-                    <span class="inline-block bg-blue-50 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 border border-blue-100">${job.employment_type || 'Full-Time'}</span>
-                    <h3 class="text-xl font-extrabold text-tng-navy mb-3 group-hover:text-tng-red transition-colors leading-tight">${job.title}</h3>
-                    
-                    <div class="space-y-2 mb-5">
-                        <p class="text-gray-600 text-sm font-medium"><i class="fa-solid fa-building w-5 text-gray-400"></i> ${job.company}</p>
-                        <p class="text-gray-600 text-sm font-medium"><i class="fa-solid fa-location-dot w-5 text-gray-400"></i> ${job.location}</p>
-                    </div>
-                    
-                    <p class="text-gray-500 text-sm font-light leading-relaxed line-clamp-3 mb-2">${job.description || 'No summary available.'}</p>
-                </div>
-                
-                <div class="bg-gray-50 border-t border-gray-100 p-4 px-6 sm:px-8">
-                    <button onclick="openJobDetails('${job.id}')" class="w-full bg-white border border-gray-300 text-tng-navy font-bold py-3 rounded-lg shadow-sm hover:border-tng-navy hover:bg-tng-navy hover:text-white transition-all text-xs uppercase tracking-widest">
-                        View Role Details
-                    </button>
-                </div>
-              </div>
-            `;
-          }).join('');
-      }
-
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
     });
+
+    document.getElementById('current-year').innerText = new Date().getFullYear();
   </script>
 </body>
 </html>
