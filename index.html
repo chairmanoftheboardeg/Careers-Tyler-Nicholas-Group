@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,37 +102,27 @@
       </div>
     </header>
 
-    <section class="w-full bg-white py-24 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-16">
+    <section class="w-full bg-white py-32 border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-6 md:px-12 text-center" data-aos="fade-up">
             
-            <div class="w-full lg:w-1/3 flex justify-center lg:justify-start" data-aos="fade-right">
-                <div class="relative">
-                    <div class="absolute inset-0 bg-tng-navy rounded-2xl transform translate-x-4 translate-y-4 opacity-10"></div>
-                    <img src="https://thumbs.dreamstime.com/b/unknown-businessman-avatar-profile-picture-black-white-illustration-35616527.jpg" alt="Geraldin DJEMBO" class="relative z-10 w-64 h-64 md:w-80 md:h-80 object-cover rounded-2xl shadow-xl border border-gray-100 grayscale hover:grayscale-0 transition-all duration-500">
-                </div>
+            <h2 class="text-xs text-tng-red font-bold uppercase tracking-widest mb-4 border-b-4 border-tng-red inline-block pb-2">Human Resources Mandate</h2>
+            <h3 class="text-4xl md:text-5xl font-extrabold text-tng-navy mb-10 tracking-tight">To the Innovators & Builders,</h3>
+            
+            <div class="space-y-8 text-gray-600 font-light leading-relaxed text-xl mb-12 text-left md:text-center">
+                <p>
+                    At the Tyler Nicholas Group, we do not simply hire employees; we invest in leaders. Our organization is built on a decentralized model of execution, which means we require individuals who possess not only exceptional technical skills, but the autonomy and vision to drive entire vertical markets.
+                </p>
+                <p>
+                    We operate with the understanding that global talent is boundless, yet opportunity is often siloed. Our mission in Human Resources is to shatter those silos. Whether you are engineering virtual aviation infrastructure, managing high-stakes corporate logistics, or leading our non-profit community initiatives, your merit dictates your trajectory here—nothing else.
+                </p>
+                <p>
+                    We demand excellence, precision, and unyielding ethical integrity. In return, we offer unparalleled global mobility, corporate backing, and the platform to build something that outlasts us all. We look forward to reviewing your application.
+                </p>
             </div>
 
-            <div class="w-full lg:w-2/3" data-aos="fade-left">
-                <h2 class="text-xs text-tng-red font-bold uppercase tracking-widest mb-2 border-l-4 border-tng-red pl-3">Human Resources Mandate</h2>
-                <h3 class="text-3xl md:text-4xl font-extrabold text-tng-navy mb-8 tracking-tight">To the Innovators & Builders,</h3>
-                
-                <div class="space-y-6 text-gray-600 font-light leading-relaxed text-lg mb-8">
-                    <p>
-                        At the Tyler Nicholas Group, we do not simply hire employees; we invest in leaders. Our organization is built on a decentralized model of execution, which means we require individuals who possess not only exceptional technical skills, but the autonomy and vision to drive entire vertical markets.
-                    </p>
-                    <p>
-                        We operate with the understanding that global talent is boundless, yet opportunity is often siloed. Our mission in Human Resources is to shatter those silos. Whether you are engineering virtual aviation infrastructure, managing high-stakes corporate logistics, or leading our non-profit community initiatives, your merit dictates your trajectory here—nothing else.
-                    </p>
-                    <p>
-                        We demand excellence, precision, and unyielding ethical integrity. In return, we offer unparalleled global mobility, corporate backing, and the platform to build something that outlasts us all. We look forward to reviewing your application.
-                    </p>
-                </div>
-
-                <div class="flex flex-col items-start pt-4 border-t border-gray-100">
-                    <span class="font-signature text-4xl text-tng-navy mb-1 transform -rotate-2">Geraldin DJEMBO</span>
-                    <p class="font-bold text-gray-900">Geraldin DJEMBO</p>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Chief Human Resources Officer</p>
-                </div>
+            <div class="pt-8 border-t border-gray-200 inline-block px-12">
+                <p class="font-bold text-tng-navy text-xl">The Human Resources Department</p>
+                <p class="text-sm text-gray-500 uppercase tracking-widest font-bold mt-2">Tyler Nicholas Group</p>
             </div>
 
         </div>
@@ -193,7 +183,10 @@
             </div>
 
             <div id="jobs-grid" class="space-y-6">
-                <p class="text-gray-500 italic text-center py-12 text-lg" id="jobs-status">Accessing global recruitment database...</p>
+                <div class="flex flex-col items-center justify-center py-12" id="jobs-status-container">
+                    <div class="loader-spinner mb-4 border-tng-navy/20 border-left-tng-red"></div>
+                    <p class="text-gray-500 italic text-lg" id="jobs-status">Accessing global recruitment database...</p>
+                </div>
             </div>
 
         </div>
@@ -423,7 +416,7 @@
         
         // Auto-populate UI elements
         document.getElementById('modal-job-title').innerText = jobTitle;
-        document.getElementById('app-role-visible').value = jobTitle; // The new locked input field
+        document.getElementById('app-role-visible').value = jobTitle; // The locked input field
         document.getElementById('modal-company-name').innerHTML = `<i class="fa-solid fa-building mr-1"></i> ${companyName}`;
         
         document.body.classList.add('modal-open');
@@ -453,7 +446,16 @@
           document.getElementById('rate-limit-banner').classList.remove('hidden');
       }
 
+      const gridContainer = document.getElementById('jobs-grid');
+      const statusContainer = document.getElementById('jobs-status-container');
+      const statusText = document.getElementById('jobs-status');
+
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds maximum wait for Supabase to load
+
       const checkSupabase = setInterval(async () => {
+        attempts++;
+        
         if (window.supabase) {
           clearInterval(checkSupabase); 
           
@@ -469,18 +471,15 @@
                 .eq('is_active', true)
                 .order('created_at', { ascending: false });
             
-            const gridContainer = document.getElementById('jobs-grid');
-            
             if (jobsError) {
-                // If it fails, print the exact error to the screen so we can debug it
-                document.getElementById('jobs-status').innerHTML = `<span class="text-red-500 font-bold">Database Error:</span> ${jobsError.message || jobsError.details || JSON.stringify(jobsError)}`;
+                // Print explicit database error
+                statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Database Connection Error</h3><p class="text-sm text-red-600 font-mono">${jobsError.message || JSON.stringify(jobsError)}</p></div>`;
                 console.error("Supabase Fetch Error:", jobsError);
             } else if (!jobs || jobs.length === 0) {
-              document.getElementById('jobs-status').innerText = 'No open positions available at this time. Please check back later.';
+              statusContainer.innerHTML = `<p class="text-gray-500 italic text-center text-lg">No open positions available at this time. Please check back later.</p>`;
             } else {
               gridContainer.innerHTML = jobs.map((job, index) => {
                 const delay = (index % 5) * 50;
-                
                 return `
                   <div class="bg-white border border-gray-200 p-8 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm hover:shadow-md transition-shadow group" data-aos="fade-up" data-aos-delay="${delay}">
                     <div class="mb-6 md:mb-0">
@@ -496,11 +495,11 @@
               }).join('');
             }
           } catch (err) {
-              document.getElementById('jobs-status').innerHTML = `<span class="text-red-500 font-bold">System Error:</span> ${err.message}`;
+              statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">System Execution Error</h3><p class="text-sm text-red-600 font-mono">${err.message}</p></div>`;
               console.error(err);
           }
 
-          // 2. SUBMIT APPLICATION LOGIC (Connects to backend RPC)
+          // 2. SUBMIT APPLICATION LOGIC
           const appForm = document.getElementById('application-form');
           if(appForm) {
               appForm.addEventListener('submit', async (e) => {
@@ -513,7 +512,6 @@
                   btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Transmitting Securely...';
                   errorMsg.classList.add('hidden');
 
-                  // Helper function to safely get values
                   const getVal = (id) => document.getElementById(id).value.trim();
                   
                   const payload = {
@@ -548,18 +546,13 @@
                       const { data, error } = await supabaseClient.rpc('submit_job_application', payload);
                       if (error) throw error;
                       
-                      // Success Logic
                       appForm.classList.add('hidden');
                       btn.classList.add('hidden');
-                      document.getElementById('app-tracking-display').innerText = data; // Display tracking UUID
+                      document.getElementById('app-tracking-display').innerText = data; 
                       document.getElementById('app-success').classList.remove('hidden');
                       
-                      // Lockout user for 24 hours
                       localStorage.setItem('tng_last_application', new Date().getTime().toString());
-                      
-                      // Show rate limit banner in background
                       document.getElementById('rate-limit-banner').classList.remove('hidden');
-                      
                       appForm.reset();
                       
                   } catch (err) {
@@ -572,6 +565,10 @@
               });
           }
 
+        } else if (attempts >= maxAttempts) {
+            // Failsafe timeout if Supabase CDN is blocked by ad-blocker or network issue
+            clearInterval(checkSupabase);
+            statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Connection Timeout</h3><p class="text-sm text-red-600 font-mono">Unable to initialize secure connection to the database. Please check your internet connection or disable any strict ad-blockers.</p></div>`;
         }
       }, 100); 
     });
