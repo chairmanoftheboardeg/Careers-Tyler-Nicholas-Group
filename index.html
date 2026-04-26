@@ -36,38 +36,31 @@
     body.loading { overflow: hidden; height: 100vh; }
     body.modal-open { overflow: hidden; }
     #loading-screen { transition: opacity 0.6s ease-out, visibility 0.6s; }
-    .loader-spinner {
-      border: 4px solid rgba(0, 31, 63, 0.1);
-      border-left-color: #a6192e;
-      border-radius: 50%;
-      width: 50px; height: 50px;
-      animation: spin 1s linear infinite;
-    }
+    .loader-spinner { border: 4px solid rgba(0, 31, 63, 0.1); border-left-color: #a6192e; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .hero-bg {
-      background: linear-gradient(rgba(0, 31, 63, 0.85), rgba(0, 31, 63, 0.95)), url('https://static.vecteezy.com/system/resources/previews/015/274/044/non_2x/banner-web-template-abstract-black-curved-shapes-with-lighting-on-dark-background-vector.jpg') no-repeat center center;
-      background-size: cover; background-attachment: fixed;
-    }
     
-    /* Custom Scrollbars */
+    .hero-bg { background: linear-gradient(rgba(0, 31, 63, 0.85), rgba(0, 31, 63, 0.95)), url('https://static.vecteezy.com/system/resources/previews/015/274/044/non_2x/banner-web-template-abstract-black-curved-shapes-with-lighting-on-dark-background-vector.jpg') no-repeat center center; background-size: cover; background-attachment: fixed; }
+    
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #001f3f; }
+    .chat-scroll::-webkit-scrollbar { width: 6px; }
     
-    /* Unified Modal Transitions */
+    /* View Transitions (SPA) */
+    .view-section { display: none; opacity: 0; transition: opacity 0.4s ease; }
+    .view-active { display: block; opacity: 1; }
+
+    /* Modal Transitions */
     .modal-overlay { transition: opacity 0.3s ease, visibility 0.3s ease; }
     .modal-content-slide { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .modal-content-fade { transition: opacity 0.3s ease, transform 0.3s ease; }
-    
     .modal-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .modal-hidden .modal-content-slide { transform: translateX(100%); }
     .modal-hidden .modal-content-fade { opacity: 0; transform: scale(0.95) translateY(10px); }
-    
     .modal-visible { opacity: 1; visibility: visible; pointer-events: auto; }
     .modal-visible .modal-content-slide { transform: translateX(0); }
     .modal-visible .modal-content-fade { opacity: 1; transform: scale(1) translateY(0); }
-
     .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   </style>
 </head>
@@ -80,7 +73,7 @@
   </div>
 
   <nav class="bg-tng-navy/95 backdrop-blur-md text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-lg sticky top-0 z-40 border-b border-white/10">
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center space-x-4 cursor-pointer" onclick="switchView('home')">
       <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-10">
       <div class="hidden sm:block">
           <div class="font-bold text-xl tracking-wider uppercase leading-none">Tyler Nicholas Group</div>
@@ -89,162 +82,241 @@
     </div>
     
     <div class="flex items-center gap-3 md:gap-5">
-      <a href="https://tylernicholasgroup.com/" class="hidden md:flex text-gray-300 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors items-center">
+      <button onclick="window.location.href='https://tylernicholasgroup.com/'" class="hidden md:flex text-gray-300 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors items-center">
           <i class="fa-solid fa-arrow-left mr-2"></i> Main Site
-      </a>
-      <a href="login.html" id="nav-auth-btn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-2.5 rounded-lg transition-all shadow-sm text-xs font-bold uppercase tracking-widest flex items-center">
+      </button>
+
+      <button id="nav-login-btn" onclick="openModal('auth-modal')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-2.5 rounded-lg transition-all shadow-sm text-xs font-bold uppercase tracking-widest flex items-center">
           <i class="fa-solid fa-user mr-2"></i> Sign In
-      </a>
+      </button>
+
+      <div id="nav-user-controls" class="hidden flex items-center gap-3">
+          <button onclick="switchView('dashboard')" class="bg-white hover:bg-gray-100 text-tng-navy px-5 py-2.5 rounded-lg transition-all shadow-sm text-xs font-bold uppercase tracking-widest flex items-center">
+              <i class="fa-solid fa-table-columns mr-2"></i> Dashboard
+          </button>
+          <button onclick="handleLogout()" class="bg-tng-red hover:bg-red-800 border border-transparent text-white px-4 py-2.5 rounded-lg transition-all shadow-sm text-xs font-bold uppercase tracking-widest flex items-center" title="Sign Out">
+              <i class="fa-solid fa-power-off"></i>
+          </button>
+      </div>
     </div>
   </nav>
 
   <main class="flex-grow w-full flex flex-col items-center">
     
-    <header class="hero-bg w-full py-32 flex items-center justify-center px-4 shadow-inner border-b-4 border-tng-red">
-      <div class="max-w-4xl text-center z-10" data-aos="fade-up">
-        <p class="text-tng-red font-bold tracking-widest uppercase mb-4 text-sm">Global Talent Network</p>
-        <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight text-white uppercase drop-shadow-lg">
-          Shape the Future of Enterprise
-        </h1>
-        <p class="text-lg md:text-xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
-          Join a dynamic global holding company. We are seeking visionaries, operators, and digital architects to drive growth across our diverse portfolio.
-        </p>
-      </div>
-    </header>
+    <div id="view-home" class="w-full view-section view-active">
+        
+        <header class="hero-bg w-full py-32 flex items-center justify-center px-4 shadow-inner border-b-4 border-tng-red">
+          <div class="max-w-4xl text-center z-10" data-aos="fade-up">
+            <p class="text-tng-red font-bold tracking-widest uppercase mb-4 text-sm">Global Talent Network</p>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight text-white uppercase drop-shadow-lg">Shape the Future of Enterprise</h1>
+            <p class="text-lg md:text-xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">Join a dynamic global holding company. We are seeking visionaries, operators, and digital architects to drive growth across our diverse portfolio.</p>
+          </div>
+        </header>
 
-    <section class="w-full bg-white py-24 md:py-32 border-b border-gray-200">
-        <div class="max-w-4xl mx-auto px-6 md:px-12 text-center" data-aos="fade-up">
-            <h2 class="text-xs text-tng-red font-bold uppercase tracking-widest mb-4 border-b-4 border-tng-red inline-block pb-2">Human Resources Mandate</h2>
-            <h3 class="text-3xl md:text-5xl font-extrabold text-tng-navy mb-10 tracking-tight">To the Innovators & Builders,</h3>
-            <div class="space-y-6 md:space-y-8 text-gray-600 font-light leading-relaxed text-lg md:text-xl mb-12 text-left md:text-center">
-                <p>At the Tyler Nicholas Group, we do not simply hire employees; we invest in leaders. Our organization is built on a decentralized model of execution, which means we require individuals who possess not only exceptional technical skills, but the autonomy and vision to drive entire vertical markets.</p>
-                <p>We operate with the understanding that global talent is boundless, yet opportunity is often siloed. Our mission in Human Resources is to shatter those silos. Whether you are engineering virtual aviation infrastructure, managing high-stakes corporate logistics, or leading our non-profit community initiatives, your merit dictates your trajectory here—nothing else.</p>
-                <p>We demand excellence, precision, and unyielding ethical integrity. In return, we offer unparalleled global mobility, corporate backing, and the platform to build something that outlasts us all. We look forward to reviewing your application.</p>
+        <section class="w-full bg-white py-24 border-b border-gray-200">
+            <div class="max-w-4xl mx-auto px-6 text-center" data-aos="fade-up">
+                <h2 class="text-xs text-tng-red font-bold uppercase tracking-widest mb-4 border-b-4 border-tng-red inline-block pb-2">Human Resources Mandate</h2>
+                <h3 class="text-3xl md:text-5xl font-extrabold text-tng-navy mb-10 tracking-tight">To the Innovators & Builders,</h3>
+                <div class="space-y-6 text-gray-600 font-light leading-relaxed text-lg md:text-xl mb-12 text-left md:text-center">
+                    <p>At the Tyler Nicholas Group, we do not simply hire employees; we invest in leaders. Our organization is built on a decentralized model of execution, which means we require individuals who possess not only exceptional technical skills, but the autonomy and vision to drive entire vertical markets.</p>
+                    <p>We operate with the understanding that global talent is boundless, yet opportunity is often siloed. Our mission in Human Resources is to shatter those silos.</p>
+                </div>
+                <div class="pt-8 border-t border-gray-200 inline-block px-12">
+                    <p class="font-bold text-tng-navy text-xl">The Human Resources Department</p>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest font-bold mt-2">Tyler Nicholas Group</p>
+                </div>
             </div>
-            <div class="pt-8 border-t border-gray-200 inline-block px-12">
-                <p class="font-bold text-tng-navy text-xl">The Human Resources Department</p>
-                <p class="text-sm text-gray-500 uppercase tracking-widest font-bold mt-2">Tyler Nicholas Group</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="w-full bg-tng-navyDark py-24 md:py-32 text-white border-t-8 border-tng-red overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row gap-12 md:gap-24">
-            <div class="md:w-1/3" data-aos="fade-right">
-                <div class="md:sticky md:top-32">
-                    <h2 class="text-xs md:text-sm text-tng-red font-bold uppercase tracking-widest mb-3">Corporate Ethics</h2>
-                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">The<br>Meritocracy<br>Mandate.</h3>
+        <section class="w-full bg-tng-navyDark py-24 text-white border-t-8 border-tng-red">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row gap-12 md:gap-24">
+                <div class="md:w-1/3">
+                    <div class="md:sticky md:top-32">
+                        <h2 class="text-xs md:text-sm text-tng-red font-bold uppercase tracking-widest mb-3">Corporate Ethics</h2>
+                        <h3 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">The<br>Meritocracy<br>Mandate.</h3>
+                    </div>
+                </div>
+                <div class="md:w-2/3 space-y-12">
+                    <div class="border-l-2 border-white/20 pl-6 md:pl-12">
+                        <h4 class="text-2xl font-bold mb-4 tracking-tight text-white">Absolute Equality</h4>
+                        <p class="text-lg text-gray-300 font-light leading-relaxed">The Tyler Nicholas Group strictly adheres to a policy of Equal Employment Opportunity. We do not discriminate. We hire strictly based on capability, vision, and alignment with our corporate standards. Talent is universal.</p>
+                    </div>
+                    <div class="border-l-2 border-white/20 pl-6 md:pl-12">
+                        <h4 class="text-2xl font-bold mb-4 tracking-tight text-white">Borderless Ambition</h4>
+                        <p class="text-lg text-gray-300 font-light leading-relaxed">Excellence is not confined to a single timezone. Because of our highly digital infrastructure, many of our corporate and subsidiary roles support remote, cross-border execution. We actively seek out the best minds on the planet.</p>
+                    </div>
                 </div>
             </div>
-            <div class="md:w-2/3 space-y-12 md:space-y-16" data-aos="fade-left">
-                <div class="border-l-2 border-white/20 pl-6 md:pl-12">
-                    <h4 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Absolute Equality</h4>
-                    <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed">The Tyler Nicholas Group strictly adheres to a policy of Equal Employment Opportunity. We do not discriminate on the basis of race, color, religion, gender identity, sexual orientation, national origin, or disability. We hire strictly based on capability, vision, and alignment with our corporate standards. Talent is universal.</p>
-                </div>
-                <div class="border-l-2 border-white/20 pl-6 md:pl-12">
-                    <h4 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Borderless Ambition</h4>
-                    <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed">Excellence is not confined to a single timezone. Because of our highly digital infrastructure, many of our corporate and subsidiary roles support remote, cross-border execution. We actively seek out the best minds on the planet, regardless of their geographical location.</p>
-                </div>
-                <div class="border-l-2 border-tng-red pl-6 md:pl-12">
-                    <h4 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Ethical Stewardship</h4>
-                    <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed">A high-performance culture is only sustainable if it is built on respect. We expect our staff to uphold the highest standards of human rights and dignity. Integrity is a non-negotiable foundation of our enterprise, and it dictates how we interact with colleagues, partners, and the global community.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="w-full bg-gray-50 py-24 min-h-[800px]" id="open-roles">
-        <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <section class="w-full bg-gray-50 py-24 min-h-[800px]">
+            <div class="max-w-7xl mx-auto px-6 md:px-12">
+                <div class="mb-10">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-tng-navy tracking-tight mb-2">Open Opportunities</h2>
+                    <p class="text-gray-500 font-medium text-lg">Search the global recruitment database.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-10 flex flex-col md:flex-row gap-4">
+                    <div class="flex-grow relative w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="text" id="search-input" placeholder="Search job titles, keywords, companies..." class="w-full pl-14 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy focus:ring-1 focus:ring-tng-navy transition-colors text-base font-medium">
+                    </div>
+                </div>
+                <div id="jobs-status-container" class="flex flex-col items-center justify-center py-16">
+                    <div class="loader-spinner mb-4 border-tng-navy/20 border-left-tng-red"></div>
+                    <p class="text-gray-500 italic text-lg" id="jobs-status">Accessing secure database...</p>
+                </div>
+                <div id="jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                    </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="view-dashboard" class="w-full view-section py-12 px-4 md:px-12 bg-gray-50 min-h-[80vh]">
+        <div class="max-w-6xl mx-auto w-full">
             
-            <div class="mb-10" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-tng-navy tracking-tight mb-2">Open Opportunities</h2>
-                <p class="text-gray-500 font-medium text-lg">Search the global recruitment database.</p>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-10 flex flex-col md:flex-row gap-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="flex-grow relative w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" id="search-input" placeholder="Search job titles, keywords, companies, or locations..." class="w-full pl-14 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-tng-navy focus:ring-1 focus:ring-tng-navy transition-colors text-base font-medium">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 pb-6">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-tng-navy tracking-tight mb-1">Candidate Dashboard</h1>
+                    <p class="text-gray-500 font-medium text-sm"><span id="dash-user-email"></span> | Manage your active file.</p>
                 </div>
+                <button onclick="switchView('home')" class="mt-4 md:mt-0 text-sm font-bold uppercase text-tng-navy border border-tng-navy px-4 py-2 rounded-lg hover:bg-tng-navy hover:text-white transition-all">
+                    <i class="fa-solid fa-briefcase mr-2"></i> Job Board
+                </button>
             </div>
 
-            <div id="jobs-status-container" class="flex flex-col items-center justify-center py-16">
+            <div id="dash-loading" class="flex flex-col items-center justify-center py-20">
                 <div class="loader-spinner mb-4 border-tng-navy/20 border-left-tng-red"></div>
-                <p class="text-gray-500 italic text-lg" id="jobs-status">Accessing secure database...</p>
+                <p class="text-gray-500 italic font-medium">Retrieving secure file...</p>
             </div>
 
-            <div id="jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <div id="dash-empty" class="hidden bg-white border border-gray-200 rounded-2xl p-12 text-center shadow-sm">
+                <div class="w-20 h-20 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-6 border border-gray-100"><i class="fa-solid fa-folder-open"></i></div>
+                <h2 class="text-2xl font-extrabold text-tng-navy mb-3 tracking-tight">No Active Applications</h2>
+                <p class="text-gray-500 font-light mb-8 max-w-md mx-auto">Your profile is authenticated, but you have not yet submitted an application to the Tyler Nicholas Group network.</p>
+                <button onclick="switchView('home')" class="inline-flex items-center bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-sm transition-all uppercase tracking-wide text-sm">
+                    Browse Open Roles <i class="fa-solid fa-magnifying-glass ml-3"></i>
+                </button>
+            </div>
+
+            <div id="dash-active" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Current Status</span>
+                            <div id="dash-status-badge" class="px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-gray-200 text-gray-700">Loading...</div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-[10px] font-bold text-tng-red uppercase tracking-widest mb-1">Targeting Role</p>
+                            <h2 id="dash-role" class="text-xl font-extrabold text-tng-navy leading-tight mb-6">Loading...</h2>
+                            <div class="space-y-4 border-t border-gray-100 pt-4">
+                                <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Date Submitted</p><p id="dash-date" class="text-sm font-semibold text-gray-800">...</p></div>
+                                <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Assigned HR Representative</p><p id="dash-staff" class="text-sm font-semibold text-gray-800">...</p></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="lg:col-span-2">
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm flex flex-col h-[550px] overflow-hidden">
+                        <div class="bg-white px-6 py-5 border-b border-gray-200 flex justify-between items-center shadow-sm z-10">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-tng-navy text-white rounded-full flex items-center justify-center font-bold mr-4"><i class="fa-solid fa-headset"></i></div>
+                                <div>
+                                    <h3 class="font-extrabold text-tng-navy text-lg leading-tight">HR Communication Portal</h3>
+                                    <p id="dash-chat-status" class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-0.5">...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dash-chat-thread" class="flex-grow p-6 overflow-y-auto chat-scroll bg-gray-50 flex flex-col space-y-6"></div>
+                        <div class="bg-white border-t border-gray-200 p-4 sm:p-6">
+                            <div id="dash-lock-warning" class="hidden mb-3 bg-red-50 border border-red-100 p-3 rounded-lg flex items-start">
+                                <i class="fa-solid fa-circle-info text-tng-red mt-0.5 mr-3"></i>
+                                <p class="text-xs text-red-800 font-medium"><strong>Inbox Locked:</strong> HR must initiate contact before you can reply.</p>
+                            </div>
+                            <form id="dash-reply-form" class="relative">
+                                <textarea id="dash-reply-input" disabled rows="2" placeholder="Loading..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pr-16 text-sm focus:bg-white focus:border-tng-navy focus:ring-1 focus:ring-tng-navy outline-none transition-colors resize-none chat-scroll disabled:opacity-60 disabled:bg-gray-100"></textarea>
+                                <button type="submit" id="dash-reply-btn" disabled class="absolute right-3 bottom-3 bg-tng-navy hover:bg-tng-navyDark text-white w-10 h-10 rounded-lg flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-paper-plane"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 
   </main>
 
-  <footer class="bg-tng-navyDark text-white pt-16 pb-10 px-6 md:px-12 mt-auto border-t-[6px] border-tng-red">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-      <div class="mb-6 md:mb-0 text-center md:text-left">
-          <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-10 mx-auto md:mx-0 mb-4 opacity-50 grayscale">
-          <p class="text-sm text-gray-400 font-medium">Tyler Nicholas Group | Global Talent Acquisition</p>
-      </div>
-      <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-400">
-          <a href="https://tylernicholasgroup.com/privacy/" class="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="https://tylernicholasgroup.com/terms/" class="hover:text-white transition-colors">Terms of Use</a>
-          <a href="https://tylernicholasgroup.com/accessibility/" class="hover:text-white transition-colors">Accessibility</a>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto border-t border-white/10 pt-8 mt-8 text-center text-xs text-gray-500 font-medium">
-      <p>&copy; <span id="current-year"></span> Tyler Nicholas Group. All rights reserved.</p>
+  <footer class="bg-tng-navyDark text-white pt-12 pb-8 px-6 md:px-12 mt-auto border-t-[6px] border-tng-red text-center">
+    <div class="max-w-7xl mx-auto flex flex-col items-center">
+      <img src="https://i.ibb.co/1tcyLSRN/TNG-Logo.png" alt="TNG Logo" class="h-8 opacity-50 grayscale mb-4">
+      <p class="text-xs text-gray-500 font-medium uppercase tracking-widest">&copy; <span id="current-year"></span> Tyler Nicholas Group | Global Talent Acquisition</p>
     </div>
   </footer>
 
-
-  <div id="job-details-modal" class="fixed inset-0 z-[90000] bg-tng-navyDark/80 backdrop-blur-sm modal-overlay modal-hidden flex items-center justify-center p-4 sm:p-6">
-      <div class="modal-content-fade bg-white w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
+  <div id="auth-modal" class="fixed inset-0 z-[90000] bg-tng-navyDark/90 backdrop-blur-md modal-overlay modal-hidden flex items-center justify-center p-4">
+      <div class="modal-content-fade bg-white w-full max-w-md rounded-2xl shadow-2xl relative overflow-hidden">
+          <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 z-10 p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
           
-          <div class="bg-gray-50 border-b border-gray-200 px-6 py-5 sm:px-8 sm:py-6 flex justify-between items-start flex-shrink-0">
-              <div class="pr-8">
-                  <span id="jd-badge" class="inline-block bg-blue-50 text-blue-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3 border border-blue-100">Full-Time</span>
-                  <h2 id="jd-title" class="text-2xl sm:text-3xl font-extrabold text-tng-navy tracking-tight leading-tight mb-2">Job Title</h2>
-                  <p class="text-gray-600 text-sm sm:text-base font-medium flex flex-wrap gap-x-4 gap-y-2">
-                      <span><i class="fa-solid fa-building text-tng-red mr-1"></i> <span id="jd-company">Company</span></span>
-                      <span class="hidden sm:inline text-gray-300">|</span>
-                      <span><i class="fa-solid fa-location-dot text-tng-red mr-1"></i> <span id="jd-location">Location</span></span>
-                  </p>
+          <div class="p-8 sm:p-10">
+              <div class="text-center mb-8">
+                  <img src="https://i.ibb.co/TDz4dgVp/TNG-Logo.png" alt="TNG" class="h-10 mx-auto mb-3">
+                  <h2 id="auth-title" class="text-2xl font-extrabold text-tng-navy tracking-tight">Access the Network</h2>
+                  <p class="text-sm text-gray-500 mt-1 font-medium">Authentication required to process applications.</p>
               </div>
-              <button onclick="closeJobDetails()" class="absolute top-6 right-6 w-10 h-10 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-full flex items-center justify-center transition-colors focus:outline-none">
-                  <i class="fa-solid fa-xmark text-lg"></i>
-              </button>
-          </div>
 
-          <div class="flex-grow overflow-y-auto px-6 py-6 sm:px-8 sm:py-8 bg-white custom-scroll">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Role Overview & Responsibilities</h3>
-              <div id="jd-description" class="prose prose-sm sm:prose-base max-w-none text-gray-700 font-light leading-relaxed whitespace-pre-wrap">
-                  Loading description...
+              <div class="flex mb-6 border-b border-gray-200">
+                  <button id="tab-login" onclick="switchAuthTab('login')" class="w-1/2 pb-3 text-center font-bold text-xs uppercase tracking-widest border-b-2 border-tng-navy text-tng-navy transition-all">Sign In</button>
+                  <button id="tab-register" onclick="switchAuthTab('register')" class="w-1/2 pb-3 text-center font-bold text-xs uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all">Create Account</button>
               </div>
-          </div>
 
+              <div id="auth-alert" class="hidden w-full p-3 mb-6 rounded-lg text-xs font-bold border"></div>
+
+              <form id="auth-form" class="space-y-5">
+                  <input type="hidden" id="auth-mode" value="login">
+                  <div>
+                      <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Email Address</label>
+                      <input type="email" id="auth-email" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none">
+                  </div>
+                  <div>
+                      <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Password</label>
+                      <input type="password" id="auth-password" required minlength="6" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none">
+                  </div>
+                  <button type="submit" id="auth-btn" class="w-full bg-tng-navy hover:bg-tng-navyDark text-white font-bold py-3.5 rounded-lg shadow-sm transition-all uppercase tracking-widest text-xs mt-4">
+                      Authenticate
+                  </button>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <div id="job-details-modal" class="fixed inset-0 z-[80000] bg-tng-navyDark/80 backdrop-blur-sm modal-overlay modal-hidden flex items-center justify-center p-4">
+      <div class="modal-content-fade bg-white w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col relative overflow-hidden">
+          <div class="bg-gray-50 border-b border-gray-200 p-6 sm:p-8 flex-shrink-0 relative">
+              <button onclick="closeModal('job-details-modal')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-800 bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+              <span id="jd-badge" class="inline-block bg-blue-50 text-blue-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3 border border-blue-100">Type</span>
+              <h2 id="jd-title" class="text-2xl sm:text-3xl font-extrabold text-tng-navy tracking-tight leading-tight mb-2 pr-8">Role</h2>
+              <p class="text-gray-600 text-sm font-medium"><i class="fa-solid fa-building text-tng-red mr-1"></i> <span id="jd-company" class="mr-4">Company</span> <i class="fa-solid fa-location-dot text-tng-red mr-1"></i> <span id="jd-location">Location</span></p>
+          </div>
+          <div class="flex-grow overflow-y-auto p-6 sm:p-8 bg-white custom-scroll">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Role Overview</h3>
+              <div id="jd-description" class="prose prose-sm sm:prose-base max-w-none text-gray-700 font-light leading-relaxed whitespace-pre-wrap">Loading...</div>
+          </div>
           <div class="bg-gray-50 border-t border-gray-200 p-6 flex-shrink-0 flex justify-end">
-              <button id="jd-apply-btn" onclick="openATSModal()" class="w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center">
+              <button onclick="initiateApplication()" class="w-full sm:w-auto bg-tng-red hover:bg-red-800 text-white font-bold py-3.5 px-8 rounded-lg shadow-md transition-all uppercase tracking-wide text-sm flex justify-center items-center">
                   Proceed to Application <i class="fa-solid fa-arrow-right ml-3"></i>
               </button>
           </div>
       </div>
   </div>
 
-
   <div id="ats-modal" class="fixed inset-0 z-[99999] bg-tng-navyDark/90 backdrop-blur-sm modal-overlay modal-hidden flex justify-end">
-      
       <div class="modal-content-slide w-full md:w-[700px] lg:w-[800px] bg-gray-50 h-full shadow-2xl flex flex-col relative">
-          
-          <div class="bg-tng-navy text-white px-6 py-5 sm:px-8 sm:py-6 flex justify-between items-center border-b-4 border-tng-red flex-shrink-0">
+          <div class="bg-tng-navy text-white p-6 sm:p-8 flex justify-between items-center border-b-4 border-tng-red flex-shrink-0">
               <div>
-                  <p class="text-[10px] sm:text-xs font-bold text-gray-400 tracking-widest uppercase mb-1">TNG Applicant Tracking System</p>
-                  <h2 id="ats-job-title" class="text-xl sm:text-2xl font-extrabold tracking-tight truncate max-w-[250px] sm:max-w-md">Applying for Role</h2>
+                  <p class="text-[10px] font-bold text-gray-400 tracking-widest uppercase mb-1">Applicant Tracking System</p>
+                  <h2 id="ats-job-title" class="text-xl sm:text-2xl font-extrabold tracking-tight truncate max-w-[250px] sm:max-w-md">Role</h2>
               </div>
-              <button onclick="closeATSModal()" class="w-10 h-10 bg-white/10 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors focus:outline-none">
-                  <i class="fa-solid fa-xmark text-xl"></i>
-              </button>
+              <button onclick="closeModal('ats-modal')" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
           </div>
 
           <div class="flex-grow overflow-y-auto p-4 sm:p-8 custom-scroll">
@@ -252,426 +324,425 @@
               <div id="ats-success" class="hidden bg-white p-8 sm:p-12 rounded-2xl border border-green-200 shadow-sm text-center mt-4">
                   <div class="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i class="fa-solid fa-check"></i></div>
                   <h3 class="text-2xl sm:text-3xl font-bold text-tng-navy mb-3">Application Secured</h3>
-                  <p class="text-gray-600 mb-8 font-light leading-relaxed">Your application has been encrypted and safely transmitted to the Human Resources division.</p>
-                  
-                  <a href="dashboard.html" class="inline-block w-full sm:w-auto bg-tng-navy hover:bg-tng-navyDark text-white font-bold py-4 px-10 rounded-xl shadow-lg transition-all uppercase tracking-wide text-sm">
-                      Go to Candidate Dashboard <i class="fa-solid fa-arrow-right ml-2"></i>
-                  </a>
+                  <p class="text-gray-600 mb-8 font-light leading-relaxed">Your application has been safely transmitted to the Human Resources division.</p>
+                  <button onclick="closeModal('ats-modal'); switchView('dashboard');" class="inline-block w-full sm:w-auto bg-tng-navy hover:bg-tng-navyDark text-white font-bold py-4 px-10 rounded-xl shadow-lg transition-all uppercase tracking-wide text-sm">
+                      Go to Dashboard <i class="fa-solid fa-arrow-right ml-2"></i>
+                  </button>
               </div>
 
-              <form id="application-form" class="space-y-6 sm:space-y-8">
-                  
+              <form id="ats-form" class="space-y-6 sm:space-y-8">
                   <div class="bg-white border-l-4 border-tng-navy p-5 rounded-r-xl shadow-sm">
-                      <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Targeting Role & Subsidiary</label>
-                      <input type="text" id="app-role-visible" readonly class="w-full bg-transparent border-none text-tng-navy text-lg sm:text-xl font-bold p-0 outline-none cursor-not-allowed">
+                      <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Targeting</label>
+                      <input type="text" id="ats-role-visible" readonly class="w-full bg-transparent border-none text-tng-navy text-lg font-bold p-0 outline-none cursor-not-allowed">
                   </div>
 
                   <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
-                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs mr-3">1</span> Personal Identification</h3>
-                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">First Name *</label>
-                              <input type="text" id="app-first" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Middle Name</label>
-                              <input type="text" id="app-middle" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Last Name *</label>
-                              <input type="text" id="app-last" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
+                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[10px] mr-2">1</span> Identification</h3>
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">First Name *</label><input type="text" id="ats-first" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Last Name *</label><input type="text" id="ats-last" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
                       </div>
                       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Date of Birth *</label>
-                              <input type="date" id="app-dob" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors text-gray-700">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Phone Number *</label>
-                              <input type="tel" id="app-phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Date of Birth *</label><input type="date" id="ats-dob" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Phone *</label><input type="tel" id="ats-phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
                       </div>
                   </div>
 
                   <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
-                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs mr-3">2</span> Residency & Contact</h3>
-                      <div class="mb-4">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Email Address *</label>
-                          <input type="email" id="app-email" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                      </div>
-                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Country *</label>
-                              <input type="text" id="app-country" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">State/Province</label>
-                              <input type="text" id="app-state" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">City *</label>
-                              <input type="text" id="app-city" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
+                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[10px] mr-2">2</span> Contact & Locale</h3>
+                      <div class="mb-4"><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Email *</label><input type="email" id="ats-email" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Country *</label><input type="text" id="ats-country" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">City *</label><input type="text" id="ats-city" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
                       </div>
                   </div>
 
                   <div class="bg-white p-5 sm:p-7 rounded-2xl border border-gray-100 shadow-sm">
-                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs mr-3">3</span> Experience & Assets</h3>
-                      
-                      <div class="mb-5">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5"><i class="fa-solid fa-link text-tng-red mr-1"></i> Link to Resume / CV *</label>
-                          <input type="url" id="app-resume" required placeholder="Google Drive, Dropbox, external host, etc." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          <p class="text-[10px] text-gray-400 mt-1.5 ml-1">Please ensure the link viewing permissions are set to public.</p>
+                      <h3 class="text-base font-bold text-tng-navy mb-5 flex items-center"><span class="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[10px] mr-2">3</span> Professional Data</h3>
+                      <div class="mb-4"><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5"><i class="fa-solid fa-link text-tng-red mr-1"></i> Public Resume Link *</label><input type="url" id="ats-resume" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">LinkedIn</label><input type="url" id="ats-linkedin" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
+                          <div><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Portfolio</label><input type="url" id="ats-portfolio" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none"></div>
                       </div>
-
-                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5"><i class="fa-brands fa-linkedin text-blue-600 mr-1"></i> LinkedIn Profile</label>
-                              <input type="url" id="app-linkedin" placeholder="https://linkedin.com/in/..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                          <div>
-                              <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5"><i class="fa-solid fa-globe text-gray-500 mr-1"></i> Portfolio / Website</label>
-                              <input type="url" id="app-portfolio" placeholder="https://..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors">
-                          </div>
-                      </div>
-
-                      <div class="mb-5">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Summarize your relevant experience *</label>
-                          <textarea id="app-exp" required rows="4" placeholder="Briefly highlight your core competencies..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors resize-none"></textarea>
-                      </div>
-                      
-                      <div class="mb-5">
-                          <label class="block text-xs font-bold text-gray-600 uppercase mb-1.5">Why Tyler Nicholas Group? *</label>
-                          <textarea id="app-why" required rows="3" placeholder="What drives you to join our corporate network?" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:bg-white focus:border-tng-navy outline-none transition-colors resize-none"></textarea>
-                      </div>
-
-                      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                          <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Are you legally authorized to work in your country of residency? *</label>
-                          <select id="app-legal" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm focus:border-tng-navy outline-none transition-colors cursor-pointer appearance-none">
-                              <option value="">Select an option</option>
-                              <option value="true">Yes, I am legally authorized to work.</option>
-                              <option value="false">No, I am not authorized.</option>
+                      <div class="mb-4"><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Experience Summary *</label><textarea id="ats-exp" required rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none resize-none"></textarea></div>
+                      <div class="mb-4"><label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Why TNG? *</label><textarea id="ats-why" required rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none resize-none"></textarea></div>
+                      <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Legally authorized to work? *</label>
+                          <select id="ats-legal" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:border-tng-navy outline-none">
+                              <option value="">Select option</option><option value="true">Yes</option><option value="false">No / Need Sponsorship</option>
                           </select>
                       </div>
                   </div>
-
-                  <div class="bg-gray-50 p-5 sm:p-7 rounded-2xl border border-gray-200">
-                      <div class="flex items-center justify-between mb-3 border-b border-gray-200 pb-3">
-                          <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Voluntary EEO Disclosure</h3>
-                          <span class="bg-white border border-gray-200 text-gray-500 text-[10px] font-bold px-2.5 py-1 rounded shadow-sm uppercase tracking-wider">Optional</span>
-                      </div>
-                      <p class="text-xs text-gray-500 leading-relaxed mb-5 font-medium">TNG is an equal opportunity employer. These answers will NOT be visible to hiring managers during the review process and are kept strictly confidential for anonymous corporate compliance reporting.</p>
-                      
-                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Gender</label>
-                              <select id="app-gender" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Male">Male</option><option value="Female">Female</option><option value="Non-binary">Non-binary</option></select>
-                          </div>
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Race / Ethnicity</label>
-                              <select id="app-race" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Asian">Asian</option><option value="Black">Black / African Descent</option><option value="Hispanic">Hispanic / Latino</option><option value="White">White / Caucasian</option><option value="Other">Other / Mixed</option></select>
-                          </div>
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Veteran Status</label>
-                              <select id="app-veteran" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Veteran">Protected Veteran</option><option value="Not Veteran">Not a Protected Veteran</option></select>
-                          </div>
-                          <div>
-                              <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1.5">Disability Status</label>
-                              <select id="app-disability" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-xs outline-none focus:border-tng-navy cursor-pointer appearance-none"><option value="">Decline to self-identify</option><option value="Yes">Yes, I have a disability</option><option value="No">No, I do not have a disability</option></select>
-                          </div>
-                      </div>
-                  </div>
-
               </form>
           </div>
 
-          <div id="ats-footer" class="bg-white border-t border-gray-200 p-5 sm:p-6 flex-shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-              <p id="app-error" class="text-red-500 text-sm font-bold text-center hidden mb-3 bg-red-50 p-3 rounded-lg border border-red-200"></p>
-              <div class="flex gap-4">
-                  <button type="button" onclick="closeATSModal()" class="w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 rounded-xl transition-colors text-sm uppercase tracking-wide hidden sm:block">Cancel</button>
-                  <button type="submit" form="application-form" id="app-submit-btn" class="w-full sm:w-2/3 bg-tng-red hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/20 transition-all transform hover:-translate-y-0.5 uppercase tracking-wider text-sm flex justify-center items-center">
-                      Submit Application <i class="fa-solid fa-paper-plane ml-3"></i>
-                  </button>
-              </div>
+          <div id="ats-footer" class="bg-white border-t border-gray-200 p-5 flex-shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+              <p id="ats-error" class="text-red-500 text-xs font-bold text-center hidden mb-2"></p>
+              <button type="submit" form="ats-form" id="ats-submit-btn" class="w-full bg-tng-red hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all uppercase tracking-wider text-sm flex justify-center items-center">
+                  Submit Application <i class="fa-solid fa-paper-plane ml-2"></i>
+              </button>
           </div>
       </div>
   </div>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
   <script>
-    // Animations & System Load
-    window.addEventListener('load', function() {
+    // ==========================================
+    // GLOBAL STATE & SYSTEM INIT
+    // ==========================================
+    let currentUser = null;
+    let allJobsList = [];
+    let activeJob = null;
+    let activeDashboardApp = null;
+    let pendingJobApplicationId = null; // Memory state for post-login apply
+
+    document.getElementById('current-year').innerText = new Date().getFullYear();
+    
+    // View Switcher (SPA Engine)
+    function switchView(viewName) {
+        document.querySelectorAll('.view-section').forEach(el => {
+            el.classList.remove('view-active');
+        });
+        document.getElementById(`view-${viewName}`).classList.add('view-active');
+        window.scrollTo(0,0);
+        
+        if (viewName === 'dashboard') {
+            loadDashboardData();
+        }
+    }
+
+    // Generic Modal Controller
+    function openModal(modalId) {
+        document.body.classList.add('modal-open');
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('modal-hidden');
+        modal.classList.add('modal-visible');
+    }
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('modal-visible');
+        modal.classList.add('modal-hidden');
+        
+        // Only remove body lock if no other modals are open
+        setTimeout(() => {
+            const anyOpen = document.querySelectorAll('.modal-visible').length > 0;
+            if(!anyOpen) document.body.classList.remove('modal-open');
+        }, 300);
+    }
+
+    // System Boot
+    window.addEventListener('load', () => {
       const loader = document.getElementById('loading-screen');
       if (loader) {
         setTimeout(() => {
           loader.style.opacity = '0';
-          loader.style.visibility = 'hidden';
-          document.body.classList.remove('loading');
-          AOS.init({ duration: 800, once: true, offset: 20 });
+          setTimeout(() => {
+              loader.style.visibility = 'hidden';
+              document.body.classList.remove('loading');
+              AOS.init({ duration: 800, once: true, offset: 20 });
+          }, 600);
         }, 800); 
       }
     });
-    
-    document.getElementById('current-year').innerText = new Date().getFullYear();
 
-    // ==========================================
-    // Global State
-    // ==========================================
-    let currentUser = null;
-    let activeJob = null;
-    let allJobsList = [];
-
-    // ==========================================
-    // Modal Controllers
-    // ==========================================
-    function openJobDetails(jobId) {
-        const job = allJobsList.find(j => j.id === jobId);
-        if(!job) return;
-        activeJob = job;
-
-        // Populate Details Modal
-        document.getElementById('jd-title').innerText = job.title;
-        document.getElementById('jd-company').innerText = job.company;
-        document.getElementById('jd-location').innerText = job.location;
-        document.getElementById('jd-badge').innerText = job.employment_type || 'Full-Time';
-        document.getElementById('jd-description').innerText = job.description || 'No description provided.';
-        
-        document.body.classList.add('modal-open');
-        const modal = document.getElementById('job-details-modal');
-        modal.classList.remove('modal-hidden');
-        modal.classList.add('modal-visible');
-    }
-
-    function closeJobDetails() {
-        const modal = document.getElementById('job-details-modal');
-        modal.classList.remove('modal-visible');
-        modal.classList.add('modal-hidden');
-        if(!document.getElementById('ats-modal').classList.contains('modal-visible')) {
-            document.body.classList.remove('modal-open');
-        }
-    }
-
-    // THE GATEWAY: Checks login status before opening the application
-    function openATSModal() {
-        if(!activeJob) return;
-
-        // If not logged in, redirect to login page
-        if (!currentUser) {
-            window.location.href = 'login.html';
-            return;
-        }
-        
-        // They are logged in -> Populate ATS form UI
-        document.getElementById('ats-job-title').innerText = activeJob.title;
-        document.getElementById('app-role-visible').value = `${activeJob.title} — ${activeJob.company}`; 
-        
-        // Close details modal
-        const jdModal = document.getElementById('job-details-modal');
-        jdModal.classList.remove('modal-visible');
-        jdModal.classList.add('modal-hidden');
-
-        // Open ATS modal
-        document.body.classList.add('modal-open');
-        const atsModal = document.getElementById('ats-modal');
-        atsModal.classList.remove('modal-hidden');
-        atsModal.classList.add('modal-visible');
-    }
-
-    function closeATSModal() {
-        const modal = document.getElementById('ats-modal');
-        modal.classList.remove('modal-visible');
-        modal.classList.add('modal-hidden');
-        document.body.classList.remove('modal-open');
-        
-        // Reset form UI after transition
-        setTimeout(() => {
-            document.getElementById('application-form').classList.remove('hidden');
-            document.getElementById('ats-footer').classList.remove('hidden');
-            document.getElementById('ats-success').classList.add('hidden');
-            document.getElementById('app-submit-btn').classList.remove('hidden');
-        }, 400);
-    }
-
-
-    // ==========================================
-    // Core Application Initialization
-    // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
-      
-      const gridContainer = document.getElementById('jobs-grid');
-      const statusContainer = document.getElementById('jobs-status-container');
-      const searchInput = document.getElementById('search-input');
-
-      let attempts = 0;
       const checkSupabase = setInterval(async () => {
-        attempts++;
         if (window.supabase) {
           clearInterval(checkSupabase); 
-          
           const sbUrl = 'https://kkvjwmzlezrkwqiizkwp.supabase.co';
           const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtrdmp3bXpsZXpya3dxaWl6a3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzY2OTksImV4cCI6MjA5MjUxMjY5OX0.Oa44WwSsEhao79sLfkF4HA-dmDbVV3NeT9txvl83460';
-          const supabase = window.supabase.createClient(sbUrl, sbKey);
+          window.sbClient = window.supabase.createClient(sbUrl, sbKey);
 
-          try {
-            // 1. CHECK AUTHENTICATION STATUS
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                
-                // Update Navbar to show they are logged in
-                const authBtn = document.getElementById('nav-auth-btn');
-                authBtn.href = "dashboard.html";
-                authBtn.innerHTML = '<i class="fa-solid fa-table-columns mr-2"></i> Dashboard';
-                authBtn.classList.add('bg-tng-navy', 'border-transparent');
-                authBtn.classList.remove('bg-white/10');
-            }
-
-            // 2. FETCH JOBS
-            const { data: jobs, error } = await supabase
-                .from('tng_job_postings')
-                .select('*')
-                .eq('is_active', true)
-                .order('created_at', { ascending: false });
-            
-            if (error) throw error;
-
-            if (!jobs || jobs.length === 0) {
-              statusContainer.innerHTML = `<p class="text-gray-500 italic text-center text-lg">No open positions available at this time. Please check back later.</p>`;
-            } else {
-              allJobsList = jobs;
-              statusContainer.classList.add('hidden');
-              gridContainer.classList.remove('hidden');
-              
-              // Initial Render
-              renderJobs(allJobsList);
-            }
-          } catch (err) {
-              statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Database Connection Error</h3><p class="text-sm text-red-600 font-mono">${err.message || JSON.stringify(err)}</p></div>`;
-              console.error(err);
+          // 1. Session Check
+          const { data: { session } } = await window.sbClient.auth.getSession();
+          if (session) {
+              currentUser = session.user;
+              document.getElementById('nav-login-btn').classList.add('hidden');
+              document.getElementById('nav-user-controls').classList.remove('hidden');
+              document.getElementById('dash-user-email').innerText = currentUser.email;
           }
 
-          // Search Listener (Pure text search)
-          searchInput.addEventListener('input', () => {
-              const term = searchInput.value.toLowerCase();
-              const filtered = allJobsList.filter(job => {
-                  return job.title.toLowerCase().includes(term) || 
-                         (job.description && job.description.toLowerCase().includes(term)) ||
-                         (job.company && job.company.toLowerCase().includes(term)) ||
-                         (job.location && job.location.toLowerCase().includes(term));
-              });
+          // 2. Fetch Jobs
+          const { data: jobs, error } = await window.sbClient.from('tng_job_postings').select('*').eq('is_active', true).order('created_at', { ascending: false });
+          if (!error && jobs) {
+              allJobsList = jobs;
+              document.getElementById('jobs-status-container').classList.add('hidden');
+              document.getElementById('jobs-grid').classList.remove('hidden');
+              renderJobs(allJobsList);
+          } else {
+              document.getElementById('jobs-status').innerText = "System Error connecting to database.";
+          }
+
+          // Search logic
+          document.getElementById('search-input').addEventListener('input', (e) => {
+              const term = e.target.value.toLowerCase();
+              const filtered = allJobsList.filter(job => 
+                  job.title.toLowerCase().includes(term) || (job.company && job.company.toLowerCase().includes(term))
+              );
               renderJobs(filtered);
           });
-
-          // 3. ATS SUBMISSION LOGIC (USING THE AUTHENTICATED RPC)
-          const appForm = document.getElementById('application-form');
-          if(appForm) {
-              appForm.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                  if(!activeJob || !currentUser) return; // Failsafe
-
-                  const btn = document.getElementById('app-submit-btn');
-                  const errorMsg = document.getElementById('app-error');
-                  
-                  btn.disabled = true;
-                  btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Encrypting & Transmitting...';
-                  errorMsg.classList.add('hidden');
-
-                  const getVal = (id) => document.getElementById(id).value.trim();
-                  
-                  // Payload matches the updated `submit_job_application_auth` RPC
-                  const payload = {
-                      p_user_id: currentUser.id, 
-                      p_role: `${activeJob.title} - ${activeJob.company}`,
-                      p_first: getVal('app-first'),
-                      p_middle: getVal('app-middle') || null,
-                      p_last: getVal('app-last'),
-                      p_dob: getVal('app-dob'),
-                      p_country: getVal('app-country'),
-                      p_state: getVal('app-state') || null,
-                      p_city: getVal('app-city'),
-                      p_email: getVal('app-email'),
-                      p_phone: getVal('app-phone'),
-                      p_linkedin: getVal('app-linkedin') || null,
-                      p_portfolio: getVal('app-portfolio') || null,
-                      p_resume: getVal('app-resume'),
-                      p_legal: getVal('app-legal') === 'true',
-                      p_exp: getVal('app-exp'),
-                      p_why: getVal('app-why'),
-                      p_gender: getVal('app-gender') || null,
-                      p_race: getVal('app-race') || null,
-                      p_veteran: getVal('app-veteran') || null,
-                      p_disability: getVal('app-disability') || null
-                  };
-
-                  try {
-                      const { data, error } = await supabase.rpc('submit_job_application_auth', payload);
-                      
-                      // Catch the specific 1-Active-Application rule error
-                      if (error) {
-                          if (error.message.includes('SYSTEM LOCK')) {
-                              throw new Error("You already have an active application in review. You may only apply for one role at a time.");
-                          } else {
-                              throw error;
-                          }
-                      }
-                      
-                      // Success View
-                      appForm.classList.add('hidden');
-                      document.getElementById('ats-footer').classList.add('hidden');
-                      
-                      document.getElementById('ats-success').classList.remove('hidden');
-                      appForm.reset();
-                      
-                  } catch (err) {
-                      errorMsg.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${err.message || "Unknown error"}`;
-                      errorMsg.classList.remove('hidden');
-                      btn.disabled = false;
-                      btn.innerHTML = 'Submit Application <i class="fa-solid fa-paper-plane ml-3"></i>';
-                  }
-              });
-          }
-
-        } else if (attempts >= 50) {
-            clearInterval(checkSupabase);
-            statusContainer.innerHTML = `<div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg max-w-2xl mx-auto"><h3 class="text-red-800 font-bold mb-2">Connection Timeout</h3><p class="text-sm text-red-600 font-mono">Unable to initialize secure connection. Please disable strict ad-blockers.</p></div>`;
         }
-      }, 100); 
-
-      // Render Helper
-      function renderJobs(jobsArray) {
-          if(jobsArray.length === 0) {
-              gridContainer.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 italic">No roles match your current search criteria.</div>`;
-              return;
-          }
-          
-          gridContainer.innerHTML = jobsArray.map((job) => {
-            return `
-              <div class="bg-white border border-gray-200 rounded-2xl flex flex-col shadow-sm hover:shadow-xl hover:border-gray-300 transition-all duration-300 group overflow-hidden">
-                <div class="p-6 sm:p-8 flex-grow">
-                    <span class="inline-block bg-blue-50 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 border border-blue-100">${job.employment_type || 'Full-Time'}</span>
-                    <h3 class="text-xl font-extrabold text-tng-navy mb-3 group-hover:text-tng-red transition-colors leading-tight">${job.title}</h3>
-                    
-                    <div class="space-y-2 mb-5">
-                        <p class="text-gray-600 text-sm font-medium"><i class="fa-solid fa-building w-5 text-gray-400"></i> ${job.company}</p>
-                        <p class="text-gray-600 text-sm font-medium"><i class="fa-solid fa-location-dot w-5 text-gray-400"></i> ${job.location}</p>
-                    </div>
-                    
-                    <p class="text-gray-500 text-sm font-light leading-relaxed line-clamp-3 mb-2">${job.description || 'No summary available.'}</p>
-                </div>
-                
-                <div class="bg-gray-50 border-t border-gray-100 p-4 px-6 sm:px-8">
-                    <button onclick="openJobDetails('${job.id}')" class="w-full bg-white border border-gray-300 text-tng-navy font-bold py-3 rounded-lg shadow-sm hover:border-tng-navy hover:bg-tng-navy hover:text-white transition-all text-xs uppercase tracking-widest">
-                        View Role Details
-                    </button>
-                </div>
-              </div>
-            `;
-          }).join('');
-      }
-
+      }, 100);
     });
+
+    // ==========================================
+    // JOB BOARD & APPLICATION FLOW
+    // ==========================================
+    function renderJobs(jobsArray) {
+        const grid = document.getElementById('jobs-grid');
+        if(jobsArray.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 italic">No roles match criteria.</div>`; return; }
+        
+        grid.innerHTML = jobsArray.map((job) => `
+          <div class="bg-white border border-gray-200 rounded-2xl flex flex-col shadow-sm hover:shadow-lg transition-all group overflow-hidden cursor-pointer" onclick="viewJobDetails('${job.id}')">
+            <div class="p-6 flex-grow">
+                <span class="inline-block bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest mb-3">${job.employment_type || 'Full-Time'}</span>
+                <h3 class="text-lg font-bold text-tng-navy mb-2 group-hover:text-tng-red transition-colors leading-tight">${job.title}</h3>
+                <p class="text-gray-500 text-xs font-medium"><i class="fa-solid fa-building mr-1"></i> ${job.company} | <i class="fa-solid fa-location-dot mr-1"></i> ${job.location}</p>
+            </div>
+            <div class="bg-gray-50 border-t border-gray-100 p-4 text-center text-xs font-bold text-tng-navy uppercase tracking-widest group-hover:bg-tng-navy group-hover:text-white transition-colors">
+                View Details
+            </div>
+          </div>
+        `).join('');
+    }
+
+    function viewJobDetails(id) {
+        activeJob = allJobsList.find(j => j.id === id);
+        if(!activeJob) return;
+        document.getElementById('jd-title').innerText = activeJob.title;
+        document.getElementById('jd-company').innerText = activeJob.company;
+        document.getElementById('jd-location').innerText = activeJob.location;
+        document.getElementById('jd-badge').innerText = activeJob.employment_type || 'Full-Time';
+        document.getElementById('jd-description').innerText = activeJob.description || 'No description.';
+        openModal('job-details-modal');
+    }
+
+    function initiateApplication() {
+        closeModal('job-details-modal');
+        
+        // Gatekeeper: Must be logged in
+        if (!currentUser) {
+            pendingJobApplicationId = activeJob.id; // Remember what they wanted to apply for
+            setTimeout(() => {
+                openModal('auth-modal');
+                showAlert("Authentication required to submit applications.", true);
+            }, 300);
+            return;
+        }
+
+        // Logged in -> Prepare ATS Form
+        document.getElementById('ats-job-title').innerText = activeJob.title;
+        document.getElementById('ats-role-visible').value = `${activeJob.title} — ${activeJob.company}`;
+        
+        setTimeout(() => { openModal('ats-modal'); }, 300);
+    }
+
+    // Submit Application to Database
+    document.getElementById('ats-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('ats-submit-btn');
+        const err = document.getElementById('ats-error');
+        btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Transmitting...'; err.classList.add('hidden');
+        const getVal = (id) => document.getElementById(id).value.trim();
+
+        const payload = {
+            p_user_id: currentUser.id, 
+            p_role: `${activeJob.title} - ${activeJob.company}`,
+            p_first: getVal('ats-first'), p_middle: null, p_last: getVal('ats-last'),
+            p_dob: getVal('ats-dob'), p_country: getVal('ats-country'), p_state: null, p_city: getVal('ats-city'),
+            p_email: getVal('ats-email'), p_phone: getVal('ats-phone'),
+            p_linkedin: getVal('ats-linkedin') || null, p_portfolio: getVal('ats-portfolio') || null, p_resume: getVal('ats-resume'),
+            p_legal: getVal('ats-legal') === 'true', p_exp: getVal('ats-exp'), p_why: getVal('ats-why'),
+            p_gender: null, p_race: null, p_veteran: null, p_disability: null
+        };
+
+        try {
+            const { data, error } = await window.sbClient.rpc('submit_job_application_auth', payload);
+            if (error) {
+                if (error.message.includes('SYSTEM LOCK')) throw new Error("Duplicate active application detected. Only one active file allowed.");
+                throw error;
+            }
+            
+            document.getElementById('ats-form').classList.add('hidden');
+            document.getElementById('ats-footer').classList.add('hidden');
+            document.getElementById('ats-success').classList.remove('hidden');
+            document.getElementById('ats-form').reset();
+            
+        } catch (error) {
+            err.innerText = error.message; err.classList.remove('hidden');
+            btn.disabled = false; btn.innerHTML = 'Submit Application <i class="fa-solid fa-paper-plane ml-2"></i>';
+        }
+    });
+
+    // ==========================================
+    // AUTHENTICATION LOGIC
+    // ==========================================
+    function switchAuthTab(mode) {
+        document.getElementById('auth-mode').value = mode;
+        const btnL = document.getElementById('tab-login');
+        const btnR = document.getElementById('tab-register');
+        const title = document.getElementById('auth-title');
+        const submit = document.getElementById('auth-btn');
+        document.getElementById('auth-alert').classList.add('hidden');
+
+        if(mode === 'login') {
+            btnL.className = "w-1/2 pb-3 text-center font-bold text-xs uppercase tracking-widest border-b-2 border-tng-navy text-tng-navy";
+            btnR.className = "w-1/2 pb-3 text-center font-bold text-xs uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-gray-600";
+            title.innerText = "Welcome Back"; submit.innerText = "Authenticate";
+        } else {
+            btnR.className = "w-1/2 pb-3 text-center font-bold text-xs uppercase tracking-widest border-b-2 border-tng-red text-tng-red";
+            btnL.className = "w-1/2 pb-3 text-center font-bold text-xs uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-gray-600";
+            title.innerText = "Join the Network"; submit.innerText = "Create Profile";
+        }
+    }
+
+    function showAlert(msg, isError) {
+        const box = document.getElementById('auth-alert');
+        box.className = `w-full p-3 mb-6 rounded-lg text-xs font-bold border ${isError ? 'bg-red-50 border-red-200 text-red-700' : 'bg-green-50 border-green-200 text-green-700'}`;
+        box.innerText = msg; box.classList.remove('hidden');
+    }
+
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const mode = document.getElementById('auth-mode').value;
+        const email = document.getElementById('auth-email').value;
+        const pwd = document.getElementById('auth-password').value;
+        const btn = document.getElementById('auth-btn');
+        
+        btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+        try {
+            let res;
+            if (mode === 'login') res = await window.sbClient.auth.signInWithPassword({ email, password: pwd });
+            else res = await window.sbClient.auth.signUp({ email, password: pwd });
+            
+            if (res.error) throw res.error;
+
+            // Success -> Setup User
+            currentUser = res.data.user;
+            if(currentUser) {
+                document.getElementById('nav-login-btn').classList.add('hidden');
+                document.getElementById('nav-user-controls').classList.remove('hidden');
+                document.getElementById('dash-user-email').innerText = currentUser.email;
+                closeModal('auth-modal');
+
+                // Did they try to apply before logging in?
+                if(pendingJobApplicationId) {
+                    activeJob = allJobsList.find(j => j.id === pendingJobApplicationId);
+                    pendingJobApplicationId = null;
+                    setTimeout(initiateApplication, 400); // Trigger apply flow
+                } else {
+                    switchView('dashboard'); // Otherwise just go to dashboard
+                }
+            } else {
+                showAlert("Profile created. Verify email if required.", false);
+            }
+        } catch (error) {
+            showAlert(error.message, true);
+        } finally {
+            btn.disabled = false; btn.innerText = mode === 'login' ? 'Authenticate' : 'Create Profile';
+        }
+    });
+
+    async function handleLogout() {
+        await window.sbClient.auth.signOut();
+        currentUser = null; activeDashboardApp = null;
+        document.getElementById('nav-login-btn').classList.remove('hidden');
+        document.getElementById('nav-user-controls').classList.add('hidden');
+        switchView('home');
+    }
+
+    // ==========================================
+    // DASHBOARD & CHAT LOGIC
+    // ==========================================
+    async function loadDashboardData() {
+        document.getElementById('dash-loading').classList.remove('hidden');
+        document.getElementById('dash-empty').classList.add('hidden');
+        document.getElementById('dash-active').classList.add('hidden');
+
+        try {
+            const { data, error } = await window.sbClient.rpc('get_applicant_dashboard', { p_user_id: currentUser.id });
+            document.getElementById('dash-loading').classList.add('hidden');
+            
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                document.getElementById('dash-empty').classList.remove('hidden');
+            } else {
+                activeDashboardApp = data[0]; // Take most recent
+                populateDashboardUI(activeDashboardApp);
+                document.getElementById('dash-active').classList.remove('hidden');
+                loadChatThread(activeDashboardApp);
+            }
+        } catch (error) {
+            console.error("Dashboard Error:", error);
+        }
+    }
+
+    function populateDashboardUI(app) {
+        document.getElementById('dash-role').innerText = app.target_role;
+        document.getElementById('dash-date').innerText = new Date(app.applied_at).toLocaleDateString();
+        document.getElementById('dash-staff').innerHTML = app.assigned_staff ? `<i class="fa-solid fa-user-tie text-tng-navy mr-1"></i> ${app.assigned_staff}` : '<i class="fa-solid fa-clock text-gray-400 mr-1"></i> Awaiting Assigment';
+        
+        const badge = document.getElementById('dash-status-badge');
+        badge.innerText = app.status;
+        if(app.status==='Under Review') badge.className="px-3 py-1 rounded-md text-[10px] font-bold uppercase bg-yellow-100 text-yellow-800";
+        else badge.className="px-3 py-1 rounded-md text-[10px] font-bold uppercase bg-gray-100 text-gray-800";
+    }
+
+    async function loadChatThread(app) {
+        const thread = document.getElementById('dash-chat-thread');
+        const input = document.getElementById('dash-reply-input');
+        const btn = document.getElementById('dash-reply-btn');
+        const warn = document.getElementById('dash-lock-warning');
+        const stat = document.getElementById('dash-chat-status');
+
+        if (!app.chat_unlocked) {
+            input.disabled = true; btn.disabled = true; warn.classList.remove('hidden');
+            stat.innerHTML = `<i class="fa-solid fa-lock text-red-500 mr-1"></i> Locked`;
+        } else {
+            input.disabled = false; btn.disabled = false; input.placeholder = "Type message..."; warn.classList.add('hidden');
+            stat.innerHTML = `<i class="fa-solid fa-lock-open text-green-500 mr-1"></i> Unlocked`;
+        }
+
+        try {
+            const { data, error } = await window.sbClient.rpc('get_application_chat', { p_app_id: app.id, p_user_id: currentUser.id });
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                thread.innerHTML = `<div class="flex h-full items-center justify-center text-gray-400 text-xs italic">No messages.</div>`;
+            } else {
+                thread.innerHTML = data.map(msg => {
+                    const isApp = msg.sender_type === 'Applicant';
+                    return isApp ? `
+                        <div class="flex justify-end"><div class="bg-tng-navy text-white p-3 rounded-xl rounded-tr-sm text-xs max-w-[80%]">${msg.message}</div></div>
+                    ` : `
+                        <div class="flex justify-start"><div>
+                            <p class="text-[10px] font-bold text-tng-red mb-1 ml-1">TNG HR</p>
+                            <div class="bg-white border p-3 rounded-xl rounded-tl-sm text-xs max-w-[80%]">${msg.message}</div>
+                        </div></div>
+                    `;
+                }).join('');
+                thread.scrollTop = thread.scrollHeight;
+            }
+        } catch (e) { thread.innerHTML = `<p class="text-red-500 text-xs">Error loading chat.</p>`; }
+    }
+
+    document.getElementById('dash-reply-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('dash-reply-input');
+        const txt = input.value.trim();
+        if(!txt || !activeDashboardApp) return;
+
+        document.getElementById('dash-reply-btn').disabled = true;
+        try {
+            const { error } = await window.sbClient.rpc('reply_to_application_chat', { p_app_id: activeDashboardApp.id, p_user_id: currentUser.id, p_message: txt });
+            if(error) throw error;
+            input.value = '';
+            loadChatThread(activeDashboardApp); // Reload chat
+        } catch (e) { alert("Failed to send message: " + e.message); }
+        finally { document.getElementById('dash-reply-btn').disabled = false; }
+    });
+
   </script>
 </body>
 </html>
